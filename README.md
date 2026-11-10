@@ -13,7 +13,7 @@ NeoForge mod for Minecraft Java Edition. Tiered tools, armor, and a wireless pow
 ./gradlew build
 ```
 
-The mod jar is written to `build/libs/adaptivetools-0.2.1.jar`.
+The mod jar is written to `build/libs/adaptivetools-0.2.2.jar`.
 
 Game tests:
 
@@ -34,4 +34,4 @@ Client and dedicated server:
 ./gradlew runServer
 ```
 
-Item, armor, block, and cable textures in `assets/adaptivetools/textures` are the approved finals. Axes, shovels, hoes, swords, armor, smithing templates, and the charging blocks are art only until those items and blocks are added. Baby armor and text-free screen backgrounds are not in this set.
+Item, armor, block, cable, and screen textures in `assets/adaptivetools/textures` are the approved finals. Axes, shovels, hoes, swords, armor, smithing templates, and the charging blocks are art only until those items and blocks are added. Baby armor sheets are wired in each tier's equipment JSON. Sprite positions for the unbuilt screens are in `docs/gui_uv.json`.

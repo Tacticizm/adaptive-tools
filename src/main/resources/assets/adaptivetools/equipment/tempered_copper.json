@@ -1,0 +1,13 @@
+{
+  "layers": {
+    "humanoid": [
+      { "texture": "adaptivetools:tempered_copper" }
+    ],
+    "humanoid_leggings": [
+      { "texture": "adaptivetools:tempered_copper" }
+    ],
+    "humanoid_baby": [
+      { "texture": "adaptivetools:tempered_copper" }
+    ]
+  }
+}
