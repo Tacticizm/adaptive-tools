@@ -23,5 +23,11 @@
   "adaptivetools.screen.cap": "Cap %s×%s",
   "adaptivetools.tooltip.energy": "%s / %s FE",
   "adaptivetools.tooltip.area_on": "Area mining on (%s×%s)",
-  "adaptivetools.tooltip.area_off": "Area mining off (size %s×%s)"
+  "adaptivetools.tooltip.area_off": "Area mining off (size %s×%s)",
+  "block.adaptivetools.light_cable": "Light Cable",
+  "block.adaptivetools.medium_cable": "Medium Cable",
+  "block.adaptivetools.heavy_cable": "Heavy Cable",
+  "block.adaptivetools.test_buffer": "Test Buffer",
+  "adaptivetools.screen.reset": "Reset",
+  "adaptivetools.screen.reset_confirm": "Click Reset again to confirm"
 }

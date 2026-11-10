@@ -12,6 +12,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
+import com.tacticizm.adaptivetools.cable.CableTier;
+
 /**
  * Writes item models and the item tags this slice needs. Run {@code ./gradlew runData} to refresh
  * {@code src/generated/resources}.
@@ -25,6 +27,7 @@ public final class AdaptiveToolsData {
 
     public static void gatherServer(GatherDataEvent.Server event) {
         addProvider(event);
+        event.getGenerator().addProvider(true, new ModRecipes(event.getGenerator().getPackOutput(), event.getLookupProvider()));
     }
 
     private static void addProvider(GatherDataEvent event) {
@@ -55,6 +58,13 @@ public final class AdaptiveToolsData {
                 writes.add(itemModel(cache, id, "minecraft:item/generated"));
             }
             writes.add(itemModel(cache, "wrench", "minecraft:item/handheld"));
+            for (CableTier tier : CableTier.values()) {
+                writes.add(blockItem(cache, tier.id()));
+            }
+            writes.add(blockTag(cache, "minecraft", "mineable/pickaxe", java.util.List.of(
+                    "adaptivetools:light_cable",
+                    "adaptivetools:medium_cable",
+                    "adaptivetools:heavy_cable")));
 
             writes.add(tag(cache, "minecraft", "pickaxes", List.of(
                     ModItems.TEMPERED_COPPER_PICKAXE,
@@ -85,6 +95,28 @@ public final class AdaptiveToolsData {
             return CompletableFuture.allOf(
                     DataProvider.saveStable(cache, model, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/models/item/" + id + ".json")),
                     DataProvider.saveStable(cache, definition, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/items/" + id + ".json")));
+        }
+
+        private CompletableFuture<?> blockItem(CachedOutput cache, String id) {
+            JsonObject model = new JsonObject();
+            model.addProperty("parent", AdaptiveTools.MOD_ID + ":block/" + id);
+            JsonObject definition = new JsonObject();
+            JsonObject modelRef = new JsonObject();
+            modelRef.addProperty("type", "minecraft:model");
+            modelRef.addProperty("model", AdaptiveTools.MOD_ID + ":block/" + id);
+            definition.add("model", modelRef);
+            var root = output.getOutputFolder();
+            return CompletableFuture.allOf(
+                    DataProvider.saveStable(cache, model, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/models/item/" + id + ".json")),
+                    DataProvider.saveStable(cache, definition, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/items/" + id + ".json")));
+        }
+
+        private CompletableFuture<?> blockTag(CachedOutput cache, String namespace, String path, List<String> values) {
+            JsonObject tag = new JsonObject();
+            JsonArray array = new JsonArray();
+            values.forEach(array::add);
+            tag.add("values", array);
+            return DataProvider.saveStable(cache, tag, output.getOutputFolder().resolve("data/" + namespace + "/tags/block/" + path + ".json"));
         }
 
         private CompletableFuture<?> tag(CachedOutput cache, String namespace, String path, List<? extends net.neoforged.neoforge.registries.DeferredHolder<Item, ? extends Item>> items) {

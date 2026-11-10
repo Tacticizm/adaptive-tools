@@ -6,7 +6,7 @@ version="${mod_version}"
 displayName="${mod_name}"
 authors="Tacticizm"
 description='''
-Tiered tools that grow with you. This first slice adds the five alloy ingots, pickaxes, Flux and Ender FE storage, area mining, and a Tool Settings screen.
+Tiered tools that grow with you. Pickaxes, area mining, and Light, Medium, and Heavy cables that move FE, items, and fluids.
 '''
 
 [[dependencies.${mod_id}]]

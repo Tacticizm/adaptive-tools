@@ -8,6 +8,8 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import com.tacticizm.adaptivetools.cable.WrenchItem;
+
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -53,7 +55,7 @@ public final class ModItems {
     public static final DeferredItem<Item> CROSS_DIMENSION_MODULE = plain("cross_dimension_module");
     public static final DeferredItem<Item> CAPACITY_MODULE = plain("capacity_module");
     public static final DeferredItem<Item> RATE_MODULE = plain("rate_module");
-    public static final DeferredItem<Item> WRENCH = ITEMS.registerSimpleItem("wrench", props -> props.stacksTo(1));
+    public static final DeferredItem<WrenchItem> WRENCH = ITEMS.registerItem("wrench", props -> new WrenchItem(props.stacksTo(1)));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.adaptivetools"))
@@ -77,6 +79,9 @@ public final class ModItems {
                 output.accept(CAPACITY_MODULE.get());
                 output.accept(RATE_MODULE.get());
                 output.accept(WRENCH.get());
+                output.accept(ModBlocks.LIGHT_CABLE_ITEM.get());
+                output.accept(ModBlocks.MEDIUM_CABLE_ITEM.get());
+                output.accept(ModBlocks.HEAVY_CABLE_ITEM.get());
             })
             .build());
 
