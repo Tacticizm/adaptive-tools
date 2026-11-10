@@ -321,7 +321,7 @@ public final class PickaxeGameTests {
 
     private static ItemStack stack(net.neoforged.neoforge.registries.DeferredItem<AdaptivePickaxeItem> item, boolean area, int size) {
         ItemStack stack = new ItemStack(item.get());
-        stack.set(ModComponents.TOOL_SETTINGS.get(), new ToolSettings(area, size));
+        stack.set(ModComponents.TOOL_SETTINGS.get(), ToolSettings.area(area, size));
         return stack;
     }
 

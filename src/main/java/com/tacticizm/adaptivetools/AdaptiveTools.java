@@ -29,6 +29,7 @@ public class AdaptiveTools {
         ModItems.TABS.register(modEventBus);
         PickaxeGameTests.FUNCTIONS.register(modEventBus);
         CableGameTests.FUNCTIONS.register(modEventBus);
+        ToolGameTests.FUNCTIONS.register(modEventBus);
 
         modEventBus.addListener(ModEnergy::registerCapabilities);
         modEventBus.addListener(ModBlocks::registerCapabilities);
@@ -37,8 +38,15 @@ public class AdaptiveTools {
         modEventBus.addListener(AdaptiveToolsData::gatherServer);
         modEventBus.addListener(PickaxeGameTests::registerTests);
         modEventBus.addListener(CableGameTests::registerTests);
+        modEventBus.addListener(ToolGameTests::registerTests);
 
         NeoForge.EVENT_BUS.addListener(ToolBreakEvents::onBreak);
+        NeoForge.EVENT_BUS.addListener(ToolDropEvents::onDrops);
+        NeoForge.EVENT_BUS.addListener(SwordCombat::onSweep);
+        NeoForge.EVENT_BUS.addListener(SwordCombat::onIncoming);
+        NeoForge.EVENT_BUS.addListener(SwordCombat::onDamaged);
+        NeoForge.EVENT_BUS.addListener(SwordCombat::onDeath);
+        NeoForge.EVENT_BUS.addListener(SwordCombat::onShield);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onTooltip);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onLevelTick);
 

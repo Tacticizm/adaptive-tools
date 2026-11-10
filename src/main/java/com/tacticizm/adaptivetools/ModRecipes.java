@@ -37,6 +37,41 @@ public final class ModRecipes extends RecipeProvider.Runner {
                         .requires(Items.REDSTONE)
                         .unlockedBy("has_light_cable", has(ModBlocks.LIGHT_CABLE_ITEM.get()))
                         .save(output);
+                for (ToolTier tier : ToolTier.values()) {
+                    var ingot = ModItems.ingotFor(tier).get();
+                    shaped(RecipeCategory.TOOLS, ModItems.axeFor(tier).get())
+                            .pattern("II")
+                            .pattern("IS")
+                            .pattern(" S")
+                            .define('I', ingot)
+                            .define('S', Items.STICK)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.TOOLS, ModItems.shovelFor(tier).get())
+                            .pattern("I")
+                            .pattern("S")
+                            .pattern("S")
+                            .define('I', ingot)
+                            .define('S', Items.STICK)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.TOOLS, ModItems.hoeFor(tier).get())
+                            .pattern("II")
+                            .pattern(" S")
+                            .pattern(" S")
+                            .define('I', ingot)
+                            .define('S', Items.STICK)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.TOOLS, ModItems.swordFor(tier).get())
+                            .pattern("I")
+                            .pattern("I")
+                            .pattern("S")
+                            .define('I', ingot)
+                            .define('S', Items.STICK)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                }
                 shapeless(RecipeCategory.MISC, ModBlocks.HEAVY_CABLE_ITEM.get(), 8)
                         .requires(ModBlocks.MEDIUM_CABLE_ITEM.get(), 2)
                         .requires(ModItems.ENDER_ALLOY_INGOT.get(), 2)

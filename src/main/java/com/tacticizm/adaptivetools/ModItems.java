@@ -49,6 +49,30 @@ public final class ModItems {
     public static final DeferredItem<AdaptivePickaxeItem> FLUX_PICKAXE = pickaxe(ToolTier.FLUX_ALLOY);
     public static final DeferredItem<AdaptivePickaxeItem> ENDER_PICKAXE = pickaxe(ToolTier.ENDER_ALLOY);
 
+    public static final DeferredItem<AdaptiveAxeItem> TEMPERED_COPPER_AXE = axe(ToolTier.TEMPERED_COPPER);
+    public static final DeferredItem<AdaptiveAxeItem> RESONANT_AXE = axe(ToolTier.RESONANT_ALLOY);
+    public static final DeferredItem<AdaptiveAxeItem> EMBERSTEEL_AXE = axe(ToolTier.EMBERSTEEL);
+    public static final DeferredItem<AdaptiveAxeItem> FLUX_AXE = axe(ToolTier.FLUX_ALLOY);
+    public static final DeferredItem<AdaptiveAxeItem> ENDER_AXE = axe(ToolTier.ENDER_ALLOY);
+
+    public static final DeferredItem<AdaptiveShovelItem> TEMPERED_COPPER_SHOVEL = shovel(ToolTier.TEMPERED_COPPER);
+    public static final DeferredItem<AdaptiveShovelItem> RESONANT_SHOVEL = shovel(ToolTier.RESONANT_ALLOY);
+    public static final DeferredItem<AdaptiveShovelItem> EMBERSTEEL_SHOVEL = shovel(ToolTier.EMBERSTEEL);
+    public static final DeferredItem<AdaptiveShovelItem> FLUX_SHOVEL = shovel(ToolTier.FLUX_ALLOY);
+    public static final DeferredItem<AdaptiveShovelItem> ENDER_SHOVEL = shovel(ToolTier.ENDER_ALLOY);
+
+    public static final DeferredItem<AdaptiveHoeItem> TEMPERED_COPPER_HOE = hoe(ToolTier.TEMPERED_COPPER);
+    public static final DeferredItem<AdaptiveHoeItem> RESONANT_HOE = hoe(ToolTier.RESONANT_ALLOY);
+    public static final DeferredItem<AdaptiveHoeItem> EMBERSTEEL_HOE = hoe(ToolTier.EMBERSTEEL);
+    public static final DeferredItem<AdaptiveHoeItem> FLUX_HOE = hoe(ToolTier.FLUX_ALLOY);
+    public static final DeferredItem<AdaptiveHoeItem> ENDER_HOE = hoe(ToolTier.ENDER_ALLOY);
+
+    public static final DeferredItem<AdaptiveSwordItem> TEMPERED_COPPER_SWORD = sword(ToolTier.TEMPERED_COPPER);
+    public static final DeferredItem<AdaptiveSwordItem> RESONANT_SWORD = sword(ToolTier.RESONANT_ALLOY);
+    public static final DeferredItem<AdaptiveSwordItem> EMBERSTEEL_SWORD = sword(ToolTier.EMBERSTEEL);
+    public static final DeferredItem<AdaptiveSwordItem> FLUX_SWORD = sword(ToolTier.FLUX_ALLOY);
+    public static final DeferredItem<AdaptiveSwordItem> ENDER_SWORD = sword(ToolTier.ENDER_ALLOY);
+
     public static final DeferredItem<Item> POWER_MODULE = plain("power_module");
     public static final DeferredItem<Item> ITEM_MODULE = plain("item_module");
     public static final DeferredItem<Item> FLUID_MODULE = plain("fluid_module");
@@ -67,11 +91,13 @@ public final class ModItems {
                 output.accept(EMBERSTEEL_INGOT.get());
                 output.accept(FLUX_ALLOY_INGOT.get());
                 output.accept(ENDER_ALLOY_INGOT.get());
-                output.accept(TEMPERED_COPPER_PICKAXE.get());
-                output.accept(RESONANT_PICKAXE.get());
-                output.accept(EMBERSTEEL_PICKAXE.get());
-                output.accept(FLUX_PICKAXE.get());
-                output.accept(ENDER_PICKAXE.get());
+                for (ToolTier tier : ToolTier.values()) {
+                    output.accept(pickaxeFor(tier).get());
+                    output.accept(axeFor(tier).get());
+                    output.accept(shovelFor(tier).get());
+                    output.accept(hoeFor(tier).get());
+                    output.accept(swordFor(tier).get());
+                }
                 output.accept(POWER_MODULE.get());
                 output.accept(ITEM_MODULE.get());
                 output.accept(FLUID_MODULE.get());
@@ -119,7 +145,67 @@ public final class ModItems {
         return ITEMS.registerSimpleItem(id, props -> props);
     }
 
+    public static DeferredItem<AdaptiveAxeItem> axeFor(ToolTier tier) {
+        return switch (tier) {
+            case TEMPERED_COPPER -> TEMPERED_COPPER_AXE;
+            case RESONANT_ALLOY -> RESONANT_AXE;
+            case EMBERSTEEL -> EMBERSTEEL_AXE;
+            case FLUX_ALLOY -> FLUX_AXE;
+            case ENDER_ALLOY -> ENDER_AXE;
+        };
+    }
+
+    public static DeferredItem<AdaptiveShovelItem> shovelFor(ToolTier tier) {
+        return switch (tier) {
+            case TEMPERED_COPPER -> TEMPERED_COPPER_SHOVEL;
+            case RESONANT_ALLOY -> RESONANT_SHOVEL;
+            case EMBERSTEEL -> EMBERSTEEL_SHOVEL;
+            case FLUX_ALLOY -> FLUX_SHOVEL;
+            case ENDER_ALLOY -> ENDER_SHOVEL;
+        };
+    }
+
+    public static DeferredItem<AdaptiveHoeItem> hoeFor(ToolTier tier) {
+        return switch (tier) {
+            case TEMPERED_COPPER -> TEMPERED_COPPER_HOE;
+            case RESONANT_ALLOY -> RESONANT_HOE;
+            case EMBERSTEEL -> EMBERSTEEL_HOE;
+            case FLUX_ALLOY -> FLUX_HOE;
+            case ENDER_ALLOY -> ENDER_HOE;
+        };
+    }
+
+    public static DeferredItem<AdaptiveSwordItem> swordFor(ToolTier tier) {
+        return switch (tier) {
+            case TEMPERED_COPPER -> TEMPERED_COPPER_SWORD;
+            case RESONANT_ALLOY -> RESONANT_SWORD;
+            case EMBERSTEEL -> EMBERSTEEL_SWORD;
+            case FLUX_ALLOY -> FLUX_SWORD;
+            case ENDER_ALLOY -> ENDER_SWORD;
+        };
+    }
+
     private static DeferredItem<AdaptivePickaxeItem> pickaxe(ToolTier tier) {
-        return ITEMS.registerItem(tier.pickaxeId(), props -> new AdaptivePickaxeItem(tier, tier == ToolTier.ENDER_ALLOY ? props.rarity(Rarity.EPIC) : props));
+        return ITEMS.registerItem(tier.pickaxeId(), props -> new AdaptivePickaxeItem(tier, ender(tier, props)));
+    }
+
+    private static DeferredItem<AdaptiveAxeItem> axe(ToolTier tier) {
+        return ITEMS.registerItem(tier.id() + "_axe", props -> new AdaptiveAxeItem(tier, ender(tier, props)));
+    }
+
+    private static DeferredItem<AdaptiveShovelItem> shovel(ToolTier tier) {
+        return ITEMS.registerItem(tier.id() + "_shovel", props -> new AdaptiveShovelItem(tier, ender(tier, props)));
+    }
+
+    private static DeferredItem<AdaptiveHoeItem> hoe(ToolTier tier) {
+        return ITEMS.registerItem(tier.id() + "_hoe", props -> new AdaptiveHoeItem(tier, ender(tier, props)));
+    }
+
+    private static DeferredItem<AdaptiveSwordItem> sword(ToolTier tier) {
+        return ITEMS.registerItem(tier.id() + "_sword", props -> new AdaptiveSwordItem(tier, ender(tier, props)));
+    }
+
+    private static Item.Properties ender(ToolTier tier, Item.Properties properties) {
+        return tier == ToolTier.ENDER_ALLOY ? properties.rarity(Rarity.EPIC) : properties;
     }
 }

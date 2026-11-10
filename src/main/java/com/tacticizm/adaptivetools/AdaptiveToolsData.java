@@ -47,6 +47,10 @@ public final class AdaptiveToolsData {
             for (ToolTier tier : ToolTier.values()) {
                 writes.add(itemModel(cache, tier.ingotId(), "minecraft:item/generated"));
                 writes.add(itemModel(cache, tier.pickaxeId(), "minecraft:item/handheld"));
+                writes.add(itemModel(cache, tier.id() + "_axe", "minecraft:item/handheld"));
+                writes.add(itemModel(cache, tier.id() + "_shovel", "minecraft:item/handheld"));
+                writes.add(itemModel(cache, tier.id() + "_hoe", "minecraft:item/handheld"));
+                writes.add(itemModel(cache, tier.id() + "_sword", "minecraft:item/handheld"));
             }
             for (String id : List.of(
                     "power_module",
@@ -72,6 +76,14 @@ public final class AdaptiveToolsData {
                     ModItems.EMBERSTEEL_PICKAXE,
                     ModItems.FLUX_PICKAXE,
                     ModItems.ENDER_PICKAXE)));
+            writes.add(tag(cache, "minecraft", "axes", List.of(
+                    ModItems.TEMPERED_COPPER_AXE, ModItems.RESONANT_AXE, ModItems.EMBERSTEEL_AXE, ModItems.FLUX_AXE, ModItems.ENDER_AXE)));
+            writes.add(tag(cache, "minecraft", "shovels", List.of(
+                    ModItems.TEMPERED_COPPER_SHOVEL, ModItems.RESONANT_SHOVEL, ModItems.EMBERSTEEL_SHOVEL, ModItems.FLUX_SHOVEL, ModItems.ENDER_SHOVEL)));
+            writes.add(tag(cache, "minecraft", "hoes", List.of(
+                    ModItems.TEMPERED_COPPER_HOE, ModItems.RESONANT_HOE, ModItems.EMBERSTEEL_HOE, ModItems.FLUX_HOE, ModItems.ENDER_HOE)));
+            writes.add(tag(cache, "minecraft", "swords", List.of(
+                    ModItems.TEMPERED_COPPER_SWORD, ModItems.RESONANT_SWORD, ModItems.EMBERSTEEL_SWORD, ModItems.FLUX_SWORD, ModItems.ENDER_SWORD)));
             for (ToolTier tier : ToolTier.values()) {
                 writes.add(tag(cache, AdaptiveTools.MOD_ID, tier.id() + "_ingots", List.of(ModItems.ingotFor(tier))));
             }

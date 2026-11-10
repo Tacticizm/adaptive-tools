@@ -47,16 +47,28 @@ public final class AreaOutlineRenderer implements CustomBlockOutlineRenderer {
             return;
         }
         ItemStack stack = player.getMainHandItem();
-        if (!(stack.getItem() instanceof AdaptivePickaxeItem pick)) {
+        if (!(stack.getItem() instanceof com.tacticizm.adaptivetools.TieredTool held)) {
             return;
         }
-        ToolSettings settings = ToolSettings.of(stack, pick.tier());
-        int side = settings.effectiveSide(pick.tier());
-        if (side <= 1) {
-            return;
-        }
+        ToolSettings settings = ToolSettings.of(stack, held.tier());
         BlockPos origin = event.getBlockPos();
-        List<BlockPos> positions = AreaMining.positions(origin, event.getHitResult().getDirection(), side);
+        List<BlockPos> positions;
+        if (held instanceof com.tacticizm.adaptivetools.AdaptiveShovelItem shovel) {
+            positions = shovel.targets(player, origin, settings);
+        } else if (held instanceof AdaptivePickaxeItem || held instanceof com.tacticizm.adaptivetools.AdaptiveHoeItem) {
+            int side = settings.effectiveSide(held.tier());
+            if (side <= 1) {
+                return;
+            }
+            positions = AreaMining.positions(origin, event.getHitResult().getDirection(), side);
+        } else if (held instanceof com.tacticizm.adaptivetools.AdaptiveAxeItem && settings.fell()) {
+            positions = com.tacticizm.adaptivetools.TreeFelling.logs(player.level(), origin, settings.effectiveFell(held.tier()), held.tier().includesNearbyTrees());
+        } else {
+            return;
+        }
+        if (positions.size() <= 1) {
+            return;
+        }
         GameType gameType = gameType(minecraft);
         List<VoxelShape> shapes = new ArrayList<>();
         for (BlockPos pos : positions) {

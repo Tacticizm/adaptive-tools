@@ -13,7 +13,7 @@ NeoForge mod for Minecraft Java Edition. Tiered tools, armor, and a wireless pow
 ./gradlew build
 ```
 
-The mod jar is written to `build/libs/adaptivetools-0.2.2.jar`.
+The mod jar is written to `build/libs/adaptivetools-0.3.0.jar`.
 
 Game tests:
 

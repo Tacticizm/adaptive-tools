@@ -119,6 +119,111 @@ public enum ToolTier {
         return incorrectBlocksForDrops;
     }
 
+    /** Tooltip damage is this baseline plus {@link #attackDamageBonus()} plus the player's 1. */
+    public float axeDamageBaseline() {
+        return this == TEMPERED_COPPER || this == RESONANT_ALLOY ? 6.0F : 5.0F;
+    }
+
+    public float shovelDamageBaseline() {
+        return 1.5F;
+    }
+
+    public float swordDamageBaseline() {
+        return 3.0F;
+    }
+
+    /** Hoes were not given a damage number. The tooltip stays at 1, the same as a fist. */
+    public float hoeDamageBaseline() {
+        return -attackDamageBonus;
+    }
+
+    /** Displayed attack speed is 4 plus this modifier. Swords stay at the vanilla 1.6. */
+    public float axeAttackSpeed() {
+        return this == TEMPERED_COPPER ? -3.1F : -3.0F;
+    }
+
+    public float shovelAttackSpeed() {
+        return -3.0F;
+    }
+
+    public float hoeAttackSpeed() {
+        return switch (this) {
+            case TEMPERED_COPPER -> -2.0F;
+            case RESONANT_ALLOY -> -1.0F;
+            default -> 0.0F;
+        };
+    }
+
+    public float swordAttackSpeed() {
+        return -2.4F;
+    }
+
+    public int maxFellLogs() {
+        return switch (this) {
+            case TEMPERED_COPPER -> 0;
+            case RESONANT_ALLOY -> 64;
+            case EMBERSTEEL -> 128;
+            case FLUX_ALLOY -> 256;
+            case ENDER_ALLOY -> 512;
+        };
+    }
+
+    public boolean canCharcoal() {
+        return this == EMBERSTEEL || this == FLUX_ALLOY || this == ENDER_ALLOY;
+    }
+
+    public boolean canGrade() {
+        return canCharcoal();
+    }
+
+    public boolean canTrench() {
+        return maxAreaSide() > 1;
+    }
+
+    public int maxTrench() {
+        return Math.max(1, maxAreaSide());
+    }
+
+    public boolean canCleave() {
+        return this != TEMPERED_COPPER;
+    }
+
+    public boolean canChain() {
+        return this == EMBERSTEEL || this == FLUX_ALLOY || this == ENDER_ALLOY;
+    }
+
+    public boolean canMomentum() {
+        return this == FLUX_ALLOY || this == ENDER_ALLOY;
+    }
+
+    public boolean canGuardBreak() {
+        return canMomentum();
+    }
+
+    public boolean canSiphon() {
+        return this == ENDER_ALLOY;
+    }
+
+    public int maxCleaveTargets() {
+        return canCleave() ? 3 : 0;
+    }
+
+    public int maxCleaveRange() {
+        return canCleave() ? 3 : 0;
+    }
+
+    public int maxChainTargets() {
+        return canChain() ? 4 : 0;
+    }
+
+    public int maxChainRange() {
+        return canChain() ? 4 : 0;
+    }
+
+    public boolean includesNearbyTrees() {
+        return this == ENDER_ALLOY;
+    }
+
     /**
      * Durability tiers use their real durability. Energy tiers still need a {@link ToolMaterial} for
      * speed and harvest, but they are not damaged; the large durability is only a safety cap.

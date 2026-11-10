@@ -22,7 +22,7 @@ import net.minecraft.world.phys.HitResult;
  * through the energy capability. Area breaks are billed one block at a time and stop before an
  * unpaid block is broken.
  */
-public class AdaptivePickaxeItem extends Item {
+public class AdaptivePickaxeItem extends Item implements TieredTool {
     private static final ThreadLocal<Boolean> BREAKING_AREA = ThreadLocal.withInitial(() -> false);
     private static final ThreadLocal<Direction> PENDING_FACE = new ThreadLocal<>();
     /** Tests pin the mined face so a mock player does not have to land a perfect ray. */

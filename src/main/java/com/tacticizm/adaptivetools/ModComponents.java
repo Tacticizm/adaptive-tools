@@ -20,6 +20,18 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ToolSettings>> TOOL_SETTINGS = COMPONENTS.register("tool_settings",
             () -> component(builder -> builder.persistent(ToolSettings.CODEC).networkSynchronized(ToolSettings.STREAM_CODEC)));
 
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MOMENTUM_STACKS = COMPONENTS.register("momentum_stacks",
+            () -> component(builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT)));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> MOMENTUM_TIME = COMPONENTS.register("momentum_time",
+            () -> component(builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> GUARD_READY = COMPONENTS.register("guard_ready",
+            () -> component(builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)));
+
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SIPHON_READY = COMPONENTS.register("siphon_ready",
+            () -> component(builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)));
+
     private ModComponents() {}
 
     private static <T> DataComponentType<T> component(UnaryOperator<DataComponentType.Builder<T>> operator) {

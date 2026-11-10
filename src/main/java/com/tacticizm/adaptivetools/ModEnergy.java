@@ -23,11 +23,15 @@ public final class ModEnergy {
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerItem(Capabilities.Energy.ITEM, (stack, access) -> {
-            if (!(stack.getItem() instanceof AdaptivePickaxeItem pick) || !pick.tier().usesEnergy()) {
+            if (!(stack.getItem() instanceof TieredTool tool) || !tool.tier().usesEnergy()) {
                 return null;
             }
-            return new ItemAccessEnergyHandler(access, ModComponents.ENERGY.get(), pick.tier().energyCapacity());
-        }, ModItems.FLUX_PICKAXE.get(), ModItems.ENDER_PICKAXE.get());
+            return new ItemAccessEnergyHandler(access, ModComponents.ENERGY.get(), tool.tier().energyCapacity());
+        }, ModItems.FLUX_PICKAXE.get(), ModItems.ENDER_PICKAXE.get(),
+                ModItems.FLUX_AXE.get(), ModItems.ENDER_AXE.get(),
+                ModItems.FLUX_SHOVEL.get(), ModItems.ENDER_SHOVEL.get(),
+                ModItems.FLUX_HOE.get(), ModItems.ENDER_HOE.get(),
+                ModItems.FLUX_SWORD.get(), ModItems.ENDER_SWORD.get());
     }
 
     public static int getStored(ItemStack stack) {
