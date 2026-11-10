@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "adaptivetools:block/medium_cable"
+    "model": "adaptivetools:block/cable/medium_inventory"
   }
 }

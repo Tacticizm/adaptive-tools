@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "adaptivetools:block/light_cable"
+    "model": "adaptivetools:block/cable/light_inventory"
   }
 }

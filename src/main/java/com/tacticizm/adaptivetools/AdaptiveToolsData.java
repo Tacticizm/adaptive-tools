@@ -99,11 +99,11 @@ public final class AdaptiveToolsData {
 
         private CompletableFuture<?> blockItem(CachedOutput cache, String id) {
             JsonObject model = new JsonObject();
-            model.addProperty("parent", AdaptiveTools.MOD_ID + ":block/" + id);
+            model.addProperty("parent", AdaptiveTools.MOD_ID + ":block/cable/" + id.replace("_cable", "") + "_inventory");
             JsonObject definition = new JsonObject();
             JsonObject modelRef = new JsonObject();
             modelRef.addProperty("type", "minecraft:model");
-            modelRef.addProperty("model", AdaptiveTools.MOD_ID + ":block/" + id);
+            modelRef.addProperty("model", AdaptiveTools.MOD_ID + ":block/cable/" + id.replace("_cable", "") + "_inventory");
             definition.add("model", modelRef);
             var root = output.getOutputFolder();
             return CompletableFuture.allOf(

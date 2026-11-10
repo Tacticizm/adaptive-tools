@@ -1,3 +1,245 @@
 {
-  "variants": { "": { "model": "adaptivetools:block/heavy_cable" } }
+  "multipart": [
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_core"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off"
+      },
+      "when": {
+        "north": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power"
+      },
+      "when": {
+        "north": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items"
+      },
+      "when": {
+        "north": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all"
+      },
+      "when": {
+        "north": "true",
+        "modules": "all"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off",
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power",
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items",
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all",
+        "y": 90
+      },
+      "when": {
+        "east": "true",
+        "modules": "all"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off",
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power",
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items",
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all",
+        "y": 180
+      },
+      "when": {
+        "south": "true",
+        "modules": "all"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off",
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power",
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items",
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all",
+        "y": 270
+      },
+      "when": {
+        "west": "true",
+        "modules": "all"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off",
+        "x": 270
+      },
+      "when": {
+        "up": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power",
+        "x": 270
+      },
+      "when": {
+        "up": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items",
+        "x": 270
+      },
+      "when": {
+        "up": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all",
+        "x": 270
+      },
+      "when": {
+        "up": "true",
+        "modules": "all"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_off",
+        "x": 90
+      },
+      "when": {
+        "down": "true",
+        "modules": "off"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_power",
+        "x": 90
+      },
+      "when": {
+        "down": "true",
+        "modules": "power"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_items",
+        "x": 90
+      },
+      "when": {
+        "down": "true",
+        "modules": "items"
+      }
+    },
+    {
+      "apply": {
+        "model": "adaptivetools:block/cable/heavy_side_all",
+        "x": 90
+      },
+      "when": {
+        "down": "true",
+        "modules": "all"
+      }
+    }
+  ]
 }

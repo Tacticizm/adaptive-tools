@@ -52,6 +52,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         face.disconnected = !face.disconnected;
         setChanged();
         invalidateNetwork();
+        syncAppearance();
         return face.disconnected;
     }
 
@@ -70,6 +71,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         face(direction).itemModule = true;
         face(direction).itemMode = TransferMode.DISABLED;
         setChanged();
+        syncAppearance();
         return true;
     }
 
@@ -80,6 +82,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         face(direction).itemModule = false;
         face(direction).itemMode = TransferMode.DISABLED;
         setChanged();
+        syncAppearance();
         return true;
     }
 
@@ -90,6 +93,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         face(direction).fluidModule = true;
         face(direction).fluidMode = TransferMode.DISABLED;
         setChanged();
+        syncAppearance();
         return true;
     }
 
@@ -100,6 +104,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         face(direction).fluidModule = false;
         face(direction).fluidMode = TransferMode.DISABLED;
         setChanged();
+        syncAppearance();
         return true;
     }
 
@@ -211,6 +216,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         if (level instanceof ServerLevel server) {
             CableNetworks.get(server).addCable(worldPosition);
         }
+        syncAppearance();
     }
 
     @Override
@@ -251,6 +257,7 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         }
         action.run();
         setChanged();
+        syncAppearance();
         return true;
     }
 
@@ -260,7 +267,14 @@ public class CableBlockEntity extends BlockEntity implements MenuProvider {
         }
         action.run();
         setChanged();
+        syncAppearance();
         return true;
+    }
+
+    private void syncAppearance() {
+        if (level != null && !level.isClientSide()) {
+            CableBlock.refresh(level, worldPosition);
+        }
     }
 
     private void invalidateNetwork() {
