@@ -84,7 +84,8 @@ public class ToolSettingsScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = (this.width - IMAGE_WIDTH) / 2;
         int top = (this.height - IMAGE_HEIGHT) / 2;
-        this.extractBackground(graphics, mouseX, mouseY, partialTick);
+        // The game already blurs once before this method. Blurring again throws
+        // "Can only blur once per frame" and closes the screen.
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, left, top, 0.0F, 0.0F, IMAGE_WIDTH, IMAGE_HEIGHT, 256, 256);
         for (var renderable : this.renderables) {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);

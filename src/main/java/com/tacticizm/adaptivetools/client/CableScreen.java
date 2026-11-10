@@ -46,7 +46,7 @@ public class CableScreen extends AbstractContainerScreen<CableMenu> {
 
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
-        this.extractBackground(graphics, mouseX, mouseY, partialTick);
+        // The game already blurs once before this method. A second blur crashes the screen.
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, this.leftPos, this.topPos, 0.0F, 0.0F, 256, 256, 256, 256);
         for (var renderable : this.renderables) {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
