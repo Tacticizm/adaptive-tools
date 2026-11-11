@@ -31,6 +31,13 @@ public class ToolSettingsScreen extends Screen {
     private static final int IMAGE_WIDTH = 256;
     private static final int IMAGE_HEIGHT = 256;
     private static final int[] SIZES = {1, 3, 5, 7};
+    /** Dark content panel on tool_settings.png, in texture pixels. */
+    private static final int PANEL_LEFT = 12;
+    private static final int PANEL_RIGHT = 160;
+    private static final int BUTTON_TOP = 42;
+    private static final int BUTTON_HEIGHT = 16;
+    private static final int ROW = 18;
+    private static final int COLUMN = 74;
 
     private final int slot;
     private ToolSettings settings;
@@ -68,49 +75,50 @@ public class ToolSettingsScreen extends Screen {
         } else {
             digger(left, top, tier, false);
         }
+        // The narrow slot on the right of the texture, not the main panel.
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
-                .bounds(left + 176, top + 228, 68, 18)
+                .bounds(left + 176, top + 112, 64, 16)
                 .build());
     }
 
     private void digger(int left, int top, ToolTier tier, boolean shovel) {
-        toggle(left + 176, top + 34, settings.areaMining() ? "Area: On" : "Area: Off", () -> {
-            settings = settings.withArea(!settings.areaMining(), settings.areaSize());
-            send();
-        });
         for (int i = 0; i < SIZES.length; i++) {
             int size = SIZES[i];
             Button button = Button.builder(Component.literal(size + "x" + size), ignored -> {
                 settings = settings.withArea(true, size);
                 send();
-            }).bounds(left + 12 + i * 38, top + 78, 36, 18).build();
+            }).bounds(left + PANEL_LEFT + i * 37, top + BUTTON_TOP, 34, BUTTON_HEIGHT).build();
             button.active = size <= tier.maxAreaSide();
             addRenderableWidget(button);
         }
+        toggle(left, top, 1, 0, COLUMN * 2 - 4, settings.areaMining() ? "Area: On" : "Area: Off", () -> {
+            settings = settings.withArea(!settings.areaMining(), settings.areaSize());
+            send();
+        });
+        int row = 2;
         if (shovel && tier.canTrench()) {
-            toggle(left + 12, top + 130, settings.trench() ? "Trench: On" : "Trench: Off", () -> {
-                settings = settings.withTrench(!settings.trench(), settings.trenchLength());
+            int length = settings.configuredTrench(tier);
+            toggle(left, top, row, 0, COLUMN, settings.trench() ? "Trench: On" : "Trench: Off", () -> {
+                settings = settings.withTrench(!settings.trench(), settings.configuredTrench(tier));
                 send();
             });
-            toggle(left + 100, top + 130, "Len " + settings.effectiveTrench(tier), () -> {
-                int next = settings.effectiveTrench(tier) >= tier.maxTrench() ? 1 : settings.effectiveTrench(tier) + 2;
+            toggle(left, top, row, 1, COLUMN, "Len " + length, () -> {
+                int next = length >= tier.maxTrench() ? 1 : Math.min(tier.maxTrench(), length + 2);
                 settings = settings.withTrench(true, next);
                 send();
             });
+            row++;
         }
         if (shovel && tier.canGrade()) {
-            toggle(left + 12, top + 152, settings.grading() ? "Grade: On" : "Grade: Off", () -> {
-                int height = settings.gradeHeight() == Integer.MIN_VALUE && Minecraft.getInstance().player != null
-                        ? Minecraft.getInstance().player.getBlockY()
-                        : settings.gradeHeight();
-                settings = settings.withGrading(!settings.grading(), height);
+            toggle(left, top, row, 0, COLUMN, settings.grading() ? "Grade: On" : "Grade: Off", () -> {
+                settings = settings.withGrading(!settings.grading(), height());
                 send();
             });
-            toggle(left + 100, top + 152, "Y-", () -> {
+            toggle(left, top, row, 1, 34, "Y-", () -> {
                 settings = settings.withGrading(true, height() - 1);
                 send();
             });
-            toggle(left + 150, top + 152, "Y+", () -> {
+            place(left + PANEL_LEFT + COLUMN + 38, top + BUTTON_TOP + row * ROW, 34, "Y+", () -> {
                 settings = settings.withGrading(true, height() + 1);
                 send();
             });
@@ -121,22 +129,23 @@ public class ToolSettingsScreen extends Screen {
         if (tier.maxFellLogs() <= 0) {
             return;
         }
-        toggle(left + 12, top + 78, settings.fell() ? "Fell: On" : "Fell: Off", () -> {
-            settings = settings.withFell(!settings.fell(), settings.fellLimit(), settings.leafClear(), settings.charcoal());
+        int limit = settings.configuredFell(tier);
+        toggle(left, top, 0, 0, COLUMN, settings.fell() ? "Fell: On" : "Fell: Off", () -> {
+            settings = settings.withFell(!settings.fell(), settings.configuredFell(tier), settings.leafClear(), settings.charcoal());
             send();
         });
-        toggle(left + 100, top + 78, "Logs " + settings.effectiveFell(tier), () -> {
-            int next = settings.effectiveFell(tier) >= tier.maxFellLogs() ? Math.min(16, tier.maxFellLogs()) : Math.min(tier.maxFellLogs(), settings.effectiveFell(tier) * 2);
+        toggle(left, top, 0, 1, COLUMN, "Logs " + limit, () -> {
+            int next = limit >= tier.maxFellLogs() ? Math.min(16, tier.maxFellLogs()) : Math.min(tier.maxFellLogs(), Math.max(16, limit * 2));
             settings = settings.withFell(true, next, settings.leafClear(), settings.charcoal());
             send();
         });
-        toggle(left + 12, top + 102, settings.leafClear() ? "Leaves: On" : "Leaves: Off", () -> {
-            settings = settings.withFell(settings.fell(), settings.fellLimit(), !settings.leafClear(), settings.charcoal());
+        toggle(left, top, 1, 0, COLUMN, settings.leafClear() ? "Leaf: On" : "Leaf: Off", () -> {
+            settings = settings.withFell(settings.fell(), settings.configuredFell(tier), !settings.leafClear(), settings.charcoal());
             send();
         });
         if (tier.canCharcoal()) {
-            toggle(left + 12, top + 126, settings.charcoal() ? "Charcoal: On" : "Charcoal: Off", () -> {
-                settings = settings.withFell(settings.fell(), settings.fellLimit(), settings.leafClear(), !settings.charcoal());
+            toggle(left, top, 2, 0, COLUMN * 2 - 4, settings.charcoal() ? "Charcoal: On" : "Charcoal: Off", () -> {
+                settings = settings.withFell(settings.fell(), settings.configuredFell(tier), settings.leafClear(), !settings.charcoal());
                 send();
             });
         }
@@ -144,72 +153,80 @@ public class ToolSettingsScreen extends Screen {
 
     private void hoe(int left, int top, ToolTier tier) {
         digger(left, top, tier, false);
-        toggle(left + 12, top + 160, settings.till() ? "Till: On" : "Till: Off", () -> {
+        int row = 2;
+        toggle(left, top, row, 0, COLUMN, settings.till() ? "Till: On" : "Till: Off", () -> {
             settings = settings.withHoe(!settings.till(), settings.harvest(), settings.replant());
             send();
         });
-        toggle(left + 90, top + 160, settings.harvest() ? "Harvest: On" : "Harvest: Off", () -> {
+        toggle(left, top, row, 1, COLUMN, settings.harvest() ? "Reap: On" : "Reap: Off", () -> {
             settings = settings.withHoe(settings.till(), !settings.harvest(), settings.replant());
             send();
         });
-        toggle(left + 176, top + 160, settings.replant() ? "Seed: On" : "Seed: Off", () -> {
+        toggle(left, top, row + 1, 0, COLUMN, settings.replant() ? "Seed: On" : "Seed: Off", () -> {
             settings = settings.withHoe(settings.till(), settings.harvest(), !settings.replant());
             send();
         });
     }
 
     private void sword(int left, int top, ToolTier tier) {
-        int y = top + 70;
+        int row = 0;
         if (tier.canCleave()) {
-            toggle(left + 12, y, settings.cleave() ? "Cleave: On" : "Cleave: Off", () -> {
+            toggle(left, top, row, 0, COLUMN, settings.cleave() ? "Cleave: On" : "Cleave: Off", () -> {
                 settings = sword(tier, !settings.cleave(), settings.chain());
                 send();
             });
-            toggle(left + 110, y, "N " + settings.cleaveTargets(), () -> {
+            toggle(left, top, row, 1, COLUMN, "N " + settings.cleaveTargets(), () -> {
                 int next = settings.cleaveTargets() >= tier.maxCleaveTargets() ? 1 : settings.cleaveTargets() + 1;
                 settings = settings.withSword(true, next, settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                         settings.momentum(), settings.guardBreak(), settings.siphon(), settings.targetPassives(), settings.targetPlayers());
                 send();
             });
-            y += 22;
+            row++;
         }
         if (tier.canChain()) {
-            toggle(left + 12, y, settings.chain() ? "Chain: On" : "Chain: Off", () -> {
+            toggle(left, top, row, 0, COLUMN, settings.chain() ? "Chain: On" : "Chain: Off", () -> {
                 settings = sword(tier, settings.cleave(), !settings.chain());
                 send();
             });
-            y += 22;
+            toggle(left, top, row, 1, COLUMN, "N " + settings.chainTargets(), () -> {
+                int next = settings.chainTargets() >= tier.maxChainTargets() ? 1 : settings.chainTargets() + 1;
+                settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), true, next, settings.chainRange(),
+                        settings.momentum(), settings.guardBreak(), settings.siphon(), settings.targetPassives(), settings.targetPlayers());
+                send();
+            });
+            row++;
         }
         if (tier.canMomentum()) {
-            toggle(left + 12, y, settings.momentum() ? "Momentum: On" : "Momentum: Off", () -> {
+            toggle(left, top, row, 0, COLUMN, settings.momentum() ? "Mom.: On" : "Mom.: Off", () -> {
                 settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                         !settings.momentum(), settings.guardBreak(), settings.siphon(), settings.targetPassives(), settings.targetPlayers());
                 send();
             });
-            y += 22;
         }
         if (tier.canGuardBreak()) {
-            toggle(left + 12, y, settings.guardBreak() ? "Guard: On" : "Guard: Off", () -> {
+            toggle(left, top, row, tier.canMomentum() ? 1 : 0, COLUMN, settings.guardBreak() ? "Guard: On" : "Guard: Off", () -> {
                 settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                         settings.momentum(), !settings.guardBreak(), settings.siphon(), settings.targetPassives(), settings.targetPlayers());
                 send();
             });
-            y += 22;
+            row++;
+        } else if (tier.canMomentum()) {
+            row++;
         }
         if (tier.canSiphon()) {
-            toggle(left + 12, y, settings.siphon() ? "Siphon: On" : "Siphon: Off", () -> {
+            toggle(left, top, row, 0, COLUMN, settings.siphon() ? "Siphon: On" : "Siphon: Off", () -> {
                 settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                         settings.momentum(), settings.guardBreak(), !settings.siphon(), settings.targetPassives(), settings.targetPlayers());
                 send();
             });
-            y += 22;
+            row++;
         }
-        toggle(left + 12, y, settings.targetPassives() ? "Passives: On" : "Passives: Off", () -> {
+        toggle(left, top, row, 0, COLUMN, settings.targetPassives() ? "Mobs: On" : "Mobs: Off", () -> {
             settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                     settings.momentum(), settings.guardBreak(), settings.siphon(), !settings.targetPassives(), settings.targetPlayers());
             send();
         });
-        toggle(left + 120, y, settings.targetPlayers() ? "Players: On" : "Players: Off", () -> {
+        toggle(left, top, row, 1, COLUMN, settings.targetPlayers() ? "PvP: On" : "PvP: Off", () -> {
             settings = settings.withSword(settings.cleave(), settings.cleaveTargets(), settings.cleaveRange(), settings.chain(), settings.chainTargets(), settings.chainRange(),
                     settings.momentum(), settings.guardBreak(), settings.siphon(), settings.targetPassives(), !settings.targetPlayers());
             send();
@@ -221,6 +238,23 @@ public class ToolSettingsScreen extends Screen {
                 settings.momentum(), settings.guardBreak(), settings.siphon(), settings.targetPassives(), settings.targetPlayers()).clamped(tier);
     }
 
+    private static String capLabel(TieredTool tool) {
+        ToolTier tier = tool.tier();
+        if (tool instanceof AdaptiveAxeItem) {
+            return tier.maxFellLogs() > 0 ? "Log cap " + tier.maxFellLogs() : "No tree felling";
+        }
+        if (tool instanceof AdaptiveSwordItem) {
+            if (tier.canChain()) {
+                return "Cleave " + tier.maxCleaveTargets() + ", chain " + tier.maxChainTargets();
+            }
+            if (tier.canCleave()) {
+                return "Cleave cap " + tier.maxCleaveTargets();
+            }
+            return null;
+        }
+        return "Area cap " + tier.maxAreaSide() + "x" + tier.maxAreaSide();
+    }
+
     private int height() {
         if (settings.gradeHeight() != Integer.MIN_VALUE) {
             return settings.gradeHeight();
@@ -229,8 +263,12 @@ public class ToolSettingsScreen extends Screen {
         return player == null ? 64 : player.getBlockY();
     }
 
-    private void toggle(int x, int y, String label, Runnable action) {
-        addRenderableWidget(Button.builder(Component.literal(label), button -> action.run()).bounds(x, y, 84, 18).build());
+    private void toggle(int left, int top, int row, int column, int width, String label, Runnable action) {
+        place(left + PANEL_LEFT + column * COLUMN, top + BUTTON_TOP + row * ROW, width, label, action);
+    }
+
+    private void place(int x, int y, int width, String label, Runnable action) {
+        addRenderableWidget(Button.builder(Component.literal(label), button -> action.run()).bounds(x, y, width, BUTTON_HEIGHT).build());
     }
 
     @Override
@@ -245,13 +283,16 @@ public class ToolSettingsScreen extends Screen {
         if (!(stack.getItem() instanceof TieredTool tool)) {
             return;
         }
-        graphics.text(this.font, stack.getHoverName(), left + 12, top + 6, 0xFF2A2A32, false);
-        graphics.text(this.font, Component.literal("Tier cap " + tool.tier().maxAreaSide() + "x" + tool.tier().maxAreaSide()), left + 12, top + 44, 0xFFE8E8E8, false);
-        if (tool.tier().usesEnergy()) {
-            graphics.text(this.font, Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), tool.tier().energyCapacity()), left + 12, top + 56, 0xFFB7E7FF, false);
+        graphics.text(this.font, stack.getHoverName(), left + 12, top + 8, 0xFF2A2A32, false);
+        String cap = capLabel(tool);
+        if (cap != null) {
+            graphics.text(this.font, Component.literal(cap), left + 12, top + 24, 0xFFE8E8E8, false);
         }
-        if (settings.grading()) {
-            graphics.text(this.font, Component.literal("Grade above Y " + height()), left + 12, top + 176, 0xFFE8E8E8, false);
+        if (tool.tier().usesEnergy()) {
+            graphics.text(this.font, Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), tool.tier().energyCapacity()), left + 120, top + 24, 0xFFB7E7FF, false);
+        }
+        if (settings.grading() && tool instanceof AdaptiveShovelItem) {
+            graphics.text(this.font, Component.literal("Above Y " + height()), left + 120, top + 8, 0xFFE8E8E8, false);
         }
     }
 

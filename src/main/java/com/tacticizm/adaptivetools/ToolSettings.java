@@ -80,7 +80,17 @@ public record ToolSettings(
     }
 
     public static ToolSettings defaults(ToolTier tier) {
-        return area(false, tier.maxAreaSide()).clamped(tier);
+        ToolSettings base = area(false, tier.maxAreaSide());
+        return new ToolSettings(
+                base.flags(),
+                base.areaSize(),
+                Math.max(1, tier.maxTrench()),
+                base.gradeHeight(),
+                Math.max(1, tier.maxFellLogs()),
+                Math.max(1, tier.maxCleaveTargets()),
+                Math.max(1, tier.maxCleaveRange()),
+                Math.max(1, tier.maxChainTargets()),
+                Math.max(1, tier.maxChainRange())).clamped(tier);
     }
 
     public static int clampSize(int requested, int cap) {
@@ -120,18 +130,32 @@ public record ToolSettings(
         return areaMining() ? clampSize(areaSize, tier.maxAreaSide()) : 1;
     }
 
+    /** Chosen trench length, even while the trench toggle is off. */
+    public int configuredTrench(ToolTier tier) {
+        int cap = Math.max(1, tier.maxTrench());
+        return Math.max(1, Math.min(trenchLength <= 0 ? cap : trenchLength, cap));
+    }
+
+    /** Chosen log limit, even while felling is off. Zero when the tier cannot fell. */
+    public int configuredFell(ToolTier tier) {
+        if (tier.maxFellLogs() <= 0) {
+            return 0;
+        }
+        return Math.max(1, Math.min(fellLimit <= 0 ? tier.maxFellLogs() : fellLimit, tier.maxFellLogs()));
+    }
+
     public int effectiveTrench(ToolTier tier) {
         if (!trench() || !tier.canTrench()) {
             return 1;
         }
-        return Math.max(1, Math.min(trenchLength, tier.maxTrench()));
+        return configuredTrench(tier);
     }
 
     public int effectiveFell(ToolTier tier) {
         if (!fell() || tier.maxFellLogs() <= 0) {
             return 1;
         }
-        return Math.max(1, Math.min(fellLimit, tier.maxFellLogs()));
+        return configuredFell(tier);
     }
 
     public ToolSettings clamped(ToolTier tier) {

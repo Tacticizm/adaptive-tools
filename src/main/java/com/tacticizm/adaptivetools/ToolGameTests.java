@@ -39,6 +39,7 @@ public final class ToolGameTests {
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> CHAIN = function("sword_chain_count", ToolGameTests::chainCount);
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> ENERGY = function("shovel_energy_stops", ToolGameTests::energyStops);
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> DENIED = function("shovel_denied_not_charged", ToolGameTests::deniedNotCharged);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> DEFAULTS = function("tool_setting_defaults", ToolGameTests::settingDefaults);
 
     private static final BlockPos CENTER = new BlockPos(8, 3, 8);
 
@@ -49,7 +50,7 @@ public final class ToolGameTests {
                 Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "tools"),
                 new TestEnvironmentDefinition.AllOf(List.of()));
         Identifier structure = Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "platform");
-        for (var test : List.of(FELL, DIG, HOE, CLEAVE, CHAIN, ENERGY, DENIED)) {
+        for (var test : List.of(FELL, DIG, HOE, CLEAVE, CHAIN, ENERGY, DENIED, DEFAULTS)) {
             event.registerTest(test.getId(), new FunctionGameTestInstance(
                     ResourceKey.create(BuiltInRegistries.TEST_FUNCTION.key(), test.getId()),
                     new TestData<>(environment, structure, 100, 0, true)));
@@ -172,6 +173,25 @@ public final class ToolGameTests {
         } finally {
             ToolBreakEvents.TEST_DENIED_POSITIONS.remove(denied);
         }
+        helper.succeed();
+    }
+
+    public static void settingDefaults(GameTestHelper helper) {
+        ToolSettings resonant = ToolSettings.defaults(ToolTier.RESONANT_ALLOY);
+        helper.assertValueEqual(resonant.fellLimit(), 64, "resonant log limit");
+        helper.assertValueEqual(resonant.areaSize(), 3, "resonant area cap");
+        helper.assertValueEqual(resonant.configuredTrench(ToolTier.RESONANT_ALLOY), 3, "resonant trench length");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.EMBERSTEEL).fellLimit(), 128, "embersteel log limit");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.FLUX_ALLOY).fellLimit(), 256, "flux log limit");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.FLUX_ALLOY).configuredTrench(ToolTier.FLUX_ALLOY), 5, "flux trench length");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.ENDER_ALLOY).fellLimit(), 512, "ender log limit");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.ENDER_ALLOY).configuredTrench(ToolTier.ENDER_ALLOY), 7, "ender trench length");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.ENDER_ALLOY).cleaveTargets(), 3, "cleave cap");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.ENDER_ALLOY).chainTargets(), 4, "chain cap");
+        helper.assertValueEqual(ToolTier.TEMPERED_COPPER.maxFellLogs(), 0, "copper has no felling");
+        helper.assertFalse(ToolSettings.defaults(ToolTier.TEMPERED_COPPER).fell(), "copper felling stays off");
+        helper.assertValueEqual(ToolSettings.defaults(ToolTier.EMBERSTEEL).areaSize(), 1, "embersteel area stays 1x1");
+        helper.assertValueEqual(resonant.withFell(true, 2, false, false).clamped(ToolTier.RESONANT_ALLOY).fellLimit(), 2, "a lower log limit is kept");
         helper.succeed();
     }
 
