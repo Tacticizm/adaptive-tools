@@ -13,6 +13,9 @@ import com.tacticizm.adaptivetools.ModBlocks;
 public class AdaptiveToolsClient {
     public AdaptiveToolsClient(IEventBus modEventBus) {
         NeoForge.EVENT_BUS.addListener(AreaOutlineRenderer::onExtract);
+        NeoForge.EVENT_BUS.addListener(FlightHud::onRender);
+        NeoForge.EVENT_BUS.addListener(ArmorKeybinds::onTick);
+        modEventBus.addListener(ArmorKeybinds::register);
         modEventBus.addListener(AdaptiveToolsClient::registerScreens);
         AdaptiveTools.LOGGER.info("Adaptive Tools client ready");
     }

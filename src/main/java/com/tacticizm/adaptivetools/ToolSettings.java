@@ -41,6 +41,10 @@ public record ToolSettings(
     private static final int SIPHON = 1 << 13;
     private static final int PASSIVES = 1 << 14;
     private static final int PLAYERS = 1 << 15;
+    public static final int WATER_WALKING = 1 << 16;
+    public static final int ELYTRA_GLIDE = 1 << 17;
+    public static final int CREATIVE_FLIGHT = 1 << 18;
+    public static final int ENERGY_SHIELD = 1 << 19;
 
     private static final Codec<ToolSettings> COMPACT = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("flags").forGetter(ToolSettings::flags),
@@ -125,6 +129,11 @@ public record ToolSettings(
     public boolean siphon() { return has(SIPHON); }
     public boolean targetPassives() { return has(PASSIVES); }
     public boolean targetPlayers() { return has(PLAYERS); }
+    public boolean waterWalking() { return has(WATER_WALKING); }
+    public boolean elytra() { return has(ELYTRA_GLIDE); }
+    public boolean flight() { return has(CREATIVE_FLIGHT); }
+    public boolean energyShield() { return has(ENERGY_SHIELD); }
+    public boolean enabled(int bit) { return has(bit); }
 
     public int effectiveSide(ToolTier tier) {
         return areaMining() ? clampSize(areaSize, tier.maxAreaSide()) : 1;
@@ -205,6 +214,26 @@ public record ToolSettings(
         next = harvestOn ? next | HARVEST : next & ~HARVEST;
         next = replantOn ? next | REPLANT : next & ~REPLANT;
         return copy(next, areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
+    }
+
+    public ToolSettings withWaterWalking(boolean on) {
+        return copy(set(WATER_WALKING, on), areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
+    }
+
+    public ToolSettings withElytra(boolean on) {
+        return copy(set(ELYTRA_GLIDE, on), areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
+    }
+
+    public ToolSettings withFlight(boolean on) {
+        return copy(set(CREATIVE_FLIGHT, on), areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
+    }
+
+    public ToolSettings withShield(boolean on) {
+        return copy(set(ENERGY_SHIELD, on), areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
+    }
+
+    public ToolSettings toggle(int bit) {
+        return copy(flags ^ bit, areaSize, trenchLength, gradeHeight, fellLimit, cleaveTargets, cleaveRange, chainTargets, chainRange);
     }
 
     public ToolSettings withSword(boolean cleaveOn, int cleaveCount, int cleaveBlocks, boolean chainOn, int chainCount, int chainBlocks,

@@ -42,8 +42,20 @@ public final class ModNetworking {
         }
     }
 
+    public record ToggleWornAbilityPayload(int bit) implements CustomPacketPayload {
+        public static final Type<ToggleWornAbilityPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "toggle_worn_ability"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ToggleWornAbilityPayload> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, ToggleWornAbilityPayload::bit,
+                ToggleWornAbilityPayload::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("2");
+        PayloadRegistrar registrar = event.registrar("3");
         registrar.playToServer(UpdateToolSettingsPayload.TYPE, UpdateToolSettingsPayload.STREAM_CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) {
                 applySettings(player, payload.slot(), payload.areaMining(), payload.areaSize());
@@ -52,6 +64,11 @@ public final class ModNetworking {
         registrar.playToServer(UpdateFullToolSettingsPayload.TYPE, UpdateFullToolSettingsPayload.STREAM_CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) {
                 applyFullSettings(player, payload.slot(), payload.settings());
+            }
+        });
+        registrar.playToServer(ToggleWornAbilityPayload.TYPE, ToggleWornAbilityPayload.STREAM_CODEC, (payload, context) -> {
+            if (context.player() instanceof ServerPlayer player) {
+                ArmorAbilities.toggleWorn(player, payload.bit());
             }
         });
     }

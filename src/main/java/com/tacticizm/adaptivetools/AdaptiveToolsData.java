@@ -51,6 +51,10 @@ public final class AdaptiveToolsData {
                 writes.add(itemModel(cache, tier.id() + "_shovel", "minecraft:item/handheld"));
                 writes.add(itemModel(cache, tier.id() + "_hoe", "minecraft:item/handheld"));
                 writes.add(itemModel(cache, tier.id() + "_sword", "minecraft:item/handheld"));
+                writes.add(itemModel(cache, tier.id() + "_helmet", "minecraft:item/generated"));
+                writes.add(itemModel(cache, tier.id() + "_chestplate", "minecraft:item/generated"));
+                writes.add(itemModel(cache, tier.id() + "_leggings", "minecraft:item/generated"));
+                writes.add(itemModel(cache, tier.id() + "_boots", "minecraft:item/generated"));
             }
             for (String id : List.of(
                     "power_module",
@@ -58,7 +62,8 @@ public final class AdaptiveToolsData {
                     "fluid_module",
                     "cross_dimension_module",
                     "capacity_module",
-                    "rate_module")) {
+                    "rate_module",
+                    "water_walking_module")) {
                 writes.add(itemModel(cache, id, "minecraft:item/generated"));
             }
             writes.add(itemModel(cache, "wrench", "minecraft:item/handheld"));
@@ -84,6 +89,10 @@ public final class AdaptiveToolsData {
                     ModItems.TEMPERED_COPPER_HOE, ModItems.RESONANT_HOE, ModItems.EMBERSTEEL_HOE, ModItems.FLUX_HOE, ModItems.ENDER_HOE)));
             writes.add(tag(cache, "minecraft", "swords", List.of(
                     ModItems.TEMPERED_COPPER_SWORD, ModItems.RESONANT_SWORD, ModItems.EMBERSTEEL_SWORD, ModItems.FLUX_SWORD, ModItems.ENDER_SWORD)));
+            writes.add(armorTag(cache, "head_armor", net.minecraft.world.item.equipment.ArmorType.HELMET));
+            writes.add(armorTag(cache, "chest_armor", net.minecraft.world.item.equipment.ArmorType.CHESTPLATE));
+            writes.add(armorTag(cache, "leg_armor", net.minecraft.world.item.equipment.ArmorType.LEGGINGS));
+            writes.add(armorTag(cache, "foot_armor", net.minecraft.world.item.equipment.ArmorType.BOOTS));
             for (ToolTier tier : ToolTier.values()) {
                 writes.add(tag(cache, AdaptiveTools.MOD_ID, tier.id() + "_ingots", List.of(ModItems.ingotFor(tier))));
             }
@@ -129,6 +138,14 @@ public final class AdaptiveToolsData {
             values.forEach(array::add);
             tag.add("values", array);
             return DataProvider.saveStable(cache, tag, output.getOutputFolder().resolve("data/" + namespace + "/tags/block/" + path + ".json"));
+        }
+
+        private CompletableFuture<?> armorTag(CachedOutput cache, String path, net.minecraft.world.item.equipment.ArmorType type) {
+            java.util.ArrayList<net.neoforged.neoforge.registries.DeferredHolder<Item, ? extends Item>> items = new java.util.ArrayList<>();
+            for (ToolTier tier : ToolTier.values()) {
+                items.add(ModItems.armor(tier, type));
+            }
+            return tag(cache, "minecraft", path, items);
         }
 
         private CompletableFuture<?> tag(CachedOutput cache, String namespace, String path, List<? extends net.neoforged.neoforge.registries.DeferredHolder<Item, ? extends Item>> items) {

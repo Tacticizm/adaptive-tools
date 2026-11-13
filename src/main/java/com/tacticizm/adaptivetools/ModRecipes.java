@@ -8,6 +8,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.equipment.ArmorType;
 
 /**
  * Wrench, medium cable, and heavy cable. Light cables stay uncraftable until their ingredients
@@ -71,7 +72,39 @@ public final class ModRecipes extends RecipeProvider.Runner {
                             .define('S', Items.STICK)
                             .unlockedBy("has_ingot", has(ingot))
                             .save(output);
+                    shaped(RecipeCategory.COMBAT, ModItems.armor(tier, ArmorType.HELMET).get())
+                            .pattern("III")
+                            .pattern("I I")
+                            .define('I', ingot)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.COMBAT, ModItems.armor(tier, ArmorType.CHESTPLATE).get())
+                            .pattern("I I")
+                            .pattern("III")
+                            .pattern("III")
+                            .define('I', ingot)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.COMBAT, ModItems.armor(tier, ArmorType.LEGGINGS).get())
+                            .pattern("III")
+                            .pattern("I I")
+                            .pattern("I I")
+                            .define('I', ingot)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
+                    shaped(RecipeCategory.COMBAT, ModItems.armor(tier, ArmorType.BOOTS).get())
+                            .pattern("I I")
+                            .pattern("I I")
+                            .define('I', ingot)
+                            .unlockedBy("has_ingot", has(ingot))
+                            .save(output);
                 }
+                shapeless(RecipeCategory.MISC, ModItems.WATER_WALKING_MODULE.get())
+                        .requires(Items.WATER_BUCKET)
+                        .requires(ModItems.RESONANT_ALLOY_INGOT.get(), 2)
+                        .requires(Items.PRISMARINE_CRYSTALS, 2)
+                        .unlockedBy("has_resonant_alloy", has(ModItems.RESONANT_ALLOY_INGOT.get()))
+                        .save(output);
                 shapeless(RecipeCategory.MISC, ModBlocks.HEAVY_CABLE_ITEM.get(), 8)
                         .requires(ModBlocks.MEDIUM_CABLE_ITEM.get(), 2)
                         .requires(ModItems.ENDER_ALLOY_INGOT.get(), 2)

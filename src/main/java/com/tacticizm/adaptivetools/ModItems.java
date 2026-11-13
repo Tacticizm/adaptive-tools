@@ -4,10 +4,15 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.equipment.ArmorType;
 import com.tacticizm.adaptivetools.cable.WrenchItem;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -73,12 +78,15 @@ public final class ModItems {
     public static final DeferredItem<AdaptiveSwordItem> FLUX_SWORD = sword(ToolTier.FLUX_ALLOY);
     public static final DeferredItem<AdaptiveSwordItem> ENDER_SWORD = sword(ToolTier.ENDER_ALLOY);
 
+    public static final Map<ToolTier, Map<ArmorType, DeferredItem<AdaptiveArmorItem>>> ARMOR = armorPieces();
+
     public static final DeferredItem<Item> POWER_MODULE = plain("power_module");
     public static final DeferredItem<Item> ITEM_MODULE = plain("item_module");
     public static final DeferredItem<Item> FLUID_MODULE = plain("fluid_module");
     public static final DeferredItem<Item> CROSS_DIMENSION_MODULE = plain("cross_dimension_module");
     public static final DeferredItem<Item> CAPACITY_MODULE = plain("capacity_module");
     public static final DeferredItem<Item> RATE_MODULE = plain("rate_module");
+    public static final DeferredItem<Item> WATER_WALKING_MODULE = plain("water_walking_module");
     public static final DeferredItem<WrenchItem> WRENCH = ITEMS.registerItem("wrench", props -> new WrenchItem(props.stacksTo(1)));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
@@ -97,6 +105,9 @@ public final class ModItems {
                     output.accept(shovelFor(tier).get());
                     output.accept(hoeFor(tier).get());
                     output.accept(swordFor(tier).get());
+                    for (ArmorType type : List.of(ArmorType.HELMET, ArmorType.CHESTPLATE, ArmorType.LEGGINGS, ArmorType.BOOTS)) {
+                        output.accept(armor(tier, type).get());
+                    }
                 }
                 output.accept(POWER_MODULE.get());
                 output.accept(ITEM_MODULE.get());
@@ -104,6 +115,7 @@ public final class ModItems {
                 output.accept(CROSS_DIMENSION_MODULE.get());
                 output.accept(CAPACITY_MODULE.get());
                 output.accept(RATE_MODULE.get());
+                output.accept(WATER_WALKING_MODULE.get());
                 output.accept(WRENCH.get());
                 output.accept(ModBlocks.LIGHT_CABLE_ITEM.get());
                 output.accept(ModBlocks.MEDIUM_CABLE_ITEM.get());
@@ -172,6 +184,43 @@ public final class ModItems {
             case EMBERSTEEL -> EMBERSTEEL_HOE;
             case FLUX_ALLOY -> FLUX_HOE;
             case ENDER_ALLOY -> ENDER_HOE;
+        };
+    }
+
+    public static DeferredItem<AdaptiveArmorItem> armor(ToolTier tier, ArmorType type) {
+        return ARMOR.get(tier).get(type);
+    }
+
+    public static Item[] energyArmor() {
+        java.util.ArrayList<Item> items = new java.util.ArrayList<>();
+        for (ToolTier tier : List.of(ToolTier.FLUX_ALLOY, ToolTier.ENDER_ALLOY)) {
+            for (ArmorType type : List.of(ArmorType.HELMET, ArmorType.CHESTPLATE, ArmorType.LEGGINGS, ArmorType.BOOTS)) {
+                items.add(armor(tier, type).get());
+            }
+        }
+        return items.toArray(Item[]::new);
+    }
+
+    private static Map<ToolTier, Map<ArmorType, DeferredItem<AdaptiveArmorItem>>> armorPieces() {
+        EnumMap<ToolTier, Map<ArmorType, DeferredItem<AdaptiveArmorItem>>> all = new EnumMap<>(ToolTier.class);
+        for (ToolTier tier : ToolTier.values()) {
+            EnumMap<ArmorType, DeferredItem<AdaptiveArmorItem>> pieces = new EnumMap<>(ArmorType.class);
+            for (ArmorType type : List.of(ArmorType.HELMET, ArmorType.CHESTPLATE, ArmorType.LEGGINGS, ArmorType.BOOTS)) {
+                String name = tier.id() + "_" + pieceName(type);
+                pieces.put(type, ITEMS.registerItem(name, props -> new AdaptiveArmorItem(tier, type, ender(tier, props))));
+            }
+            all.put(tier, pieces);
+        }
+        return all;
+    }
+
+    private static String pieceName(ArmorType type) {
+        return switch (type) {
+            case HELMET -> "helmet";
+            case CHESTPLATE -> "chestplate";
+            case LEGGINGS -> "leggings";
+            case BOOTS -> "boots";
+            case BODY -> "body";
         };
     }
 

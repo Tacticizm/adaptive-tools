@@ -1,6 +1,7 @@
 package com.tacticizm.adaptivetools.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -12,6 +13,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 
+import com.mojang.blaze3d.platform.InputConstants;
+
+import com.tacticizm.adaptivetools.AdaptiveArmorItem;
 import com.tacticizm.adaptivetools.AdaptiveAxeItem;
 import com.tacticizm.adaptivetools.AdaptiveHoeItem;
 import com.tacticizm.adaptivetools.AdaptiveShovelItem;
@@ -41,9 +45,12 @@ public class ToolSettingsScreen extends Screen {
 
     private final int slot;
     private ToolSettings settings;
+    private int listening;
 
     public ToolSettingsScreen(Player player, InteractionHand hand) {
-        super(Component.translatable("adaptivetools.screen.tool_settings"));
+        super(Component.translatable(player.getItemInHand(hand).getItem() instanceof AdaptiveArmorItem
+                ? "adaptivetools.screen.item_settings"
+                : "adaptivetools.screen.tool_settings"));
         this.slot = ModNetworking.slotFor(player, hand);
         ItemStack stack = player.getItemInHand(hand);
         ToolTier tier = ((TieredTool) stack.getItem()).tier();
@@ -64,7 +71,9 @@ public class ToolSettingsScreen extends Screen {
             return;
         }
         ToolTier tier = tool.tier();
-        if (tool instanceof AdaptiveAxeItem) {
+        if (tool instanceof AdaptiveArmorItem armor) {
+            armor(left, top, armor);
+        } else if (tool instanceof AdaptiveAxeItem) {
             axe(left, top, tier);
         } else if (tool instanceof AdaptiveShovelItem) {
             digger(left, top, tier, true);
@@ -79,6 +88,33 @@ public class ToolSettingsScreen extends Screen {
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
                 .bounds(left + 176, top + 112, 64, 16)
                 .build());
+    }
+
+    private void armor(int left, int top, AdaptiveArmorItem armor) {
+        int row = 0;
+        if (armor.canWaterWalk()) {
+            ability(left, top, row++, ToolSettings.WATER_WALKING, settings.waterWalking(), "Water");
+        }
+        if (armor.canElytra()) {
+            ability(left, top, row++, ToolSettings.ELYTRA_GLIDE, settings.elytra(), "Elytra");
+        }
+        if (armor.canFly()) {
+            ability(left, top, row++, ToolSettings.CREATIVE_FLIGHT, settings.flight(), "Flight");
+        }
+        if (armor.canShield()) {
+            ability(left, top, row, ToolSettings.ENERGY_SHIELD, settings.energyShield(), "Shield");
+        }
+    }
+
+    private void ability(int left, int top, int row, int bit, boolean on, String name) {
+        toggle(left, top, row, 0, COLUMN, name + (on ? ": On" : ": Off"), () -> {
+            settings = settings.toggle(bit);
+            send();
+        });
+        toggle(left, top, row, 1, COLUMN, listening == bit ? "Press key" : ArmorKeybinds.label(bit), () -> {
+            listening = bit;
+            init();
+        });
     }
 
     private void digger(int left, int top, ToolTier tier, boolean shovel) {
@@ -240,6 +276,9 @@ public class ToolSettingsScreen extends Screen {
 
     private static String capLabel(TieredTool tool) {
         ToolTier tier = tool.tier();
+        if (tool instanceof AdaptiveArmorItem) {
+            return null;
+        }
         if (tool instanceof AdaptiveAxeItem) {
             return tier.maxFellLogs() > 0 ? "Log cap " + tier.maxFellLogs() : "No tree felling";
         }
@@ -294,6 +333,18 @@ public class ToolSettingsScreen extends Screen {
         if (settings.grading() && tool instanceof AdaptiveShovelItem) {
             graphics.text(this.font, Component.literal("Above Y " + height()), left + 120, top + 8, 0xFFE8E8E8, false);
         }
+    }
+
+    @Override
+    public boolean keyPressed(KeyEvent event) {
+        if (listening != 0) {
+            int key = event.key();
+            ArmorKeybinds.bind(listening, key == 256 ? InputConstants.UNKNOWN : InputConstants.Type.KEYSYM.getOrCreate(key));
+            listening = 0;
+            init();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 
     @Override

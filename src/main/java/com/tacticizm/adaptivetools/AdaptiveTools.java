@@ -30,6 +30,7 @@ public class AdaptiveTools {
         PickaxeGameTests.FUNCTIONS.register(modEventBus);
         CableGameTests.FUNCTIONS.register(modEventBus);
         ToolGameTests.FUNCTIONS.register(modEventBus);
+        ArmorGameTests.FUNCTIONS.register(modEventBus);
 
         modEventBus.addListener(ModEnergy::registerCapabilities);
         modEventBus.addListener(ModBlocks::registerCapabilities);
@@ -39,6 +40,7 @@ public class AdaptiveTools {
         modEventBus.addListener(PickaxeGameTests::registerTests);
         modEventBus.addListener(CableGameTests::registerTests);
         modEventBus.addListener(ToolGameTests::registerTests);
+        modEventBus.addListener(ArmorGameTests::registerTests);
 
         NeoForge.EVENT_BUS.addListener(ToolBreakEvents::onBreak);
         NeoForge.EVENT_BUS.addListener(ToolDropEvents::onDrops);
@@ -47,6 +49,8 @@ public class AdaptiveTools {
         NeoForge.EVENT_BUS.addListener(SwordCombat::onDamaged);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onDeath);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onShield);
+        NeoForge.EVENT_BUS.addListener(ArmorAbilities::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(ArmorAbilities::onDamage);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onTooltip);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onLevelTick);
 
@@ -55,6 +59,9 @@ public class AdaptiveTools {
 
     private static void onTooltip(ItemTooltipEvent event) {
         ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof AdaptiveArmorItem armor && armor.tier().usesEnergy()) {
+            event.getToolTip().add(Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), armor.tier().energyCapacity()));
+        }
         if (!(stack.getItem() instanceof AdaptivePickaxeItem pick)) {
             return;
         }

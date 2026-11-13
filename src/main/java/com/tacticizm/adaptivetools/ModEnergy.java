@@ -32,6 +32,12 @@ public final class ModEnergy {
                 ModItems.FLUX_SHOVEL.get(), ModItems.ENDER_SHOVEL.get(),
                 ModItems.FLUX_HOE.get(), ModItems.ENDER_HOE.get(),
                 ModItems.FLUX_SWORD.get(), ModItems.ENDER_SWORD.get());
+        event.registerItem(Capabilities.Energy.ITEM, (stack, access) -> {
+            if (!(stack.getItem() instanceof TieredTool tool) || !tool.tier().usesEnergy()) {
+                return null;
+            }
+            return new ItemAccessEnergyHandler(access, ModComponents.ENERGY.get(), tool.tier().energyCapacity());
+        }, ModItems.energyArmor());
     }
 
     public static int getStored(ItemStack stack) {
