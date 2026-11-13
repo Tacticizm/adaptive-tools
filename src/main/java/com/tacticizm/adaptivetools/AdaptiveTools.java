@@ -50,6 +50,7 @@ public class AdaptiveTools {
         NeoForge.EVENT_BUS.addListener(ToolBreakEvents::onBreak);
         NeoForge.EVENT_BUS.addListener(ToolDropEvents::onDrops);
         NeoForge.EVENT_BUS.addListener(com.tacticizm.adaptivetools.wireless.MachineBlock::onDrops);
+        NeoForge.EVENT_BUS.addListener(com.tacticizm.adaptivetools.wireless.FieldGenerators::onTick);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onSweep);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onIncoming);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onDamaged);

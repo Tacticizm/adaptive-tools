@@ -45,6 +45,10 @@ public record ToolSettings(
     public static final int ELYTRA_GLIDE = 1 << 17;
     public static final int CREATIVE_FLIGHT = 1 << 18;
     public static final int ENERGY_SHIELD = 1 << 19;
+    public static final int FIELD_ON = 1 << 20;
+    public static final int FIELD_HOTBAR = 1 << 21;
+    public static final int FIELD_MAIN = 1 << 22;
+    public static final int FIELD_ARMOR = 1 << 23;
 
     private static final Codec<ToolSettings> COMPACT = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("flags").forGetter(ToolSettings::flags),
@@ -133,6 +137,10 @@ public record ToolSettings(
     public boolean elytra() { return has(ELYTRA_GLIDE); }
     public boolean flight() { return has(CREATIVE_FLIGHT); }
     public boolean energyShield() { return has(ENERGY_SHIELD); }
+    public boolean fieldOn() { return has(FIELD_ON); }
+    public boolean fieldHotbar() { return has(FIELD_HOTBAR); }
+    public boolean fieldMain() { return has(FIELD_MAIN); }
+    public boolean fieldArmor() { return has(FIELD_ARMOR); }
     public boolean enabled(int bit) { return has(bit); }
 
     public int effectiveSide(ToolTier tier) {

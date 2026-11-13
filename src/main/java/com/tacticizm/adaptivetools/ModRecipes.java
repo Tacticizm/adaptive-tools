@@ -93,6 +93,20 @@ public final class ModRecipes extends RecipeProvider.Runner {
                     .unlockedBy("has_embersteel", has(ModItems.EMBERSTEEL_INGOT.get()))
                     .save(output);
             mark(ModItems.CARRIED_RECEIVER.get());
+            shapeless(RecipeCategory.MISC, ModItems.BASIC_FIELD.get())
+                    .requires(ModItems.EMBERSTEEL_INGOT.get())
+                    .requires(Items.FURNACE)
+                    .requires(Items.REDSTONE)
+                    .unlockedBy("has_embersteel", has(ModItems.EMBERSTEEL_INGOT.get()))
+                    .save(output);
+            mark(ModItems.BASIC_FIELD.get());
+            shapeless(RecipeCategory.MISC, ModItems.ADVANCED_FIELD.get())
+                    .requires(ModItems.ENDER_ALLOY_INGOT.get())
+                    .requires(Items.FURNACE)
+                    .requires(Items.REDSTONE_BLOCK)
+                    .unlockedBy("has_ender_alloy", has(ModItems.ENDER_ALLOY_INGOT.get()))
+                    .save(output);
+            mark(ModItems.ADVANCED_FIELD.get());
             requireEveryItem();
         }
 

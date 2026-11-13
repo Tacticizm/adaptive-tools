@@ -68,7 +68,11 @@ public final class ModNetworking {
         });
         registrar.playToServer(ToggleWornAbilityPayload.TYPE, ToggleWornAbilityPayload.STREAM_CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) {
-                ArmorAbilities.toggleWorn(player, payload.bit());
+                if (payload.bit() == ToolSettings.FIELD_ON) {
+                    com.tacticizm.adaptivetools.wireless.FieldGenerators.toggle(player);
+                } else {
+                    ArmorAbilities.toggleWorn(player, payload.bit());
+                }
             }
         });
     }
@@ -103,6 +107,10 @@ public final class ModNetworking {
             return;
         }
         ItemStack stack = inventory.getItem(slot);
+        if (stack.getItem() instanceof com.tacticizm.adaptivetools.wireless.FieldGeneratorItem) {
+            stack.set(ModComponents.TOOL_SETTINGS.get(), settings);
+            return;
+        }
         if (!(stack.getItem() instanceof TieredTool tool)) {
             return;
         }

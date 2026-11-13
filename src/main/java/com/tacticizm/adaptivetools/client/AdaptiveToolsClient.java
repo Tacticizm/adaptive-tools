@@ -25,5 +25,6 @@ public class AdaptiveToolsClient {
         event.register(ModBlocks.GENERATOR_MENU.get(), MachineScreens.GeneratorScreen::new);
         event.register(ModBlocks.TRANSMITTER_MENU.get(), MachineScreens.TransmitterScreen::new);
         event.register(ModBlocks.RECEIVER_MENU.get(), MachineScreens.ReceiverScreen::new);
+        event.register(ModBlocks.FIELD_MENU.get(), FieldGeneratorScreen::new);
     }
 }

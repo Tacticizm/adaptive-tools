@@ -32,6 +32,7 @@ import com.tacticizm.adaptivetools.AdaptiveTools;
 import com.tacticizm.adaptivetools.ModBlocks;
 import com.tacticizm.adaptivetools.ModComponents;
 import com.tacticizm.adaptivetools.ModItems;
+import com.tacticizm.adaptivetools.ToolSettings;
 import com.tacticizm.adaptivetools.testing.TestBufferBlockEntity;
 
 /** Generator, transmitter, channels, receivers, and block drops. */
@@ -46,6 +47,10 @@ public final class WirelessGameTests {
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> CROSS = function("cross_dimension_needs_module", WirelessGameTests::crossDimension);
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> CARRIED = function("carried_charges_lowest_percent", WirelessGameTests::carriedLowest);
     private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> DROP = function("block_keeps_energy_when_broken", WirelessGameTests::keepsEnergy);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> FIELD_FUEL = function("field_fuel_rate_and_cap", WirelessGameTests::fieldFuel);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> FIELD_BASIC = function("field_basic_charges_lowest", WirelessGameTests::fieldBasic);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> FIELD_ADVANCED = function("field_advanced_splits_and_areas", WirelessGameTests::fieldAdvanced);
+    private static final DeferredHolder<Consumer<GameTestHelper>, Consumer<GameTestHelper>> FIELD_OFF = function("field_toggle_off_skips_generators", WirelessGameTests::fieldOff);
 
     private WirelessGameTests() {}
 
@@ -54,7 +59,7 @@ public final class WirelessGameTests {
                 Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "wireless"),
                 new TestEnvironmentDefinition.AllOf(List.of()));
         Identifier structure = Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "platform");
-        for (var test : List.of(FUEL, CAP, CHANNELS, DELIVER, CARGO, CROSS, CARRIED, DROP)) {
+        for (var test : List.of(FUEL, CAP, CHANNELS, DELIVER, CARGO, CROSS, CARRIED, DROP, FIELD_FUEL, FIELD_BASIC, FIELD_ADVANCED, FIELD_OFF)) {
             event.registerTest(test.getId(), new FunctionGameTestInstance(
                     ResourceKey.create(BuiltInRegistries.TEST_FUNCTION.key(), test.getId()),
                     new TestData<>(environment, structure, 100, 0, true)));
@@ -255,6 +260,103 @@ public final class WirelessGameTests {
         GeneratorBlockEntity restored = (GeneratorBlockEntity) level.getBlockEntity(place);
         helper.assertTrue(restored != null && restored.energy() == 12_345, "the placed generator kept its FE, found " + (restored == null ? "none" : restored.energy()));
         helper.succeed();
+    }
+
+    public static void fieldFuel(GameTestHelper helper) {
+        ServerPlayer owner = player(helper);
+        ItemStack basic = new ItemStack(ModItems.BASIC_FIELD.get());
+        basic.set(ModComponents.FIELD_FUEL.get(), new FrozenStack(new ItemStack(Items.COAL)));
+        owner.getInventory().setItem(0, basic);
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(0)), 200, "basic generates 200 FE per burn tick");
+        helper.assertTrue(owner.getInventory().getItem(0).getOrDefault(ModComponents.FIELD_BURN.get(), 0) > 0, "the coal is burning");
+        helper.assertTrue(owner.getInventory().getItem(0).get(ModComponents.FIELD_FUEL.get()) == null, "one coal was consumed");
+
+        ItemStack advanced = new ItemStack(ModItems.ADVANCED_FIELD.get());
+        advanced.set(ModComponents.FIELD_FUEL.get(), new FrozenStack(new ItemStack(Items.COAL)));
+        owner.getInventory().setItem(0, advanced);
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(0)), 1_000, "advanced generates 1000 FE per burn tick");
+
+        ItemStack capped = new ItemStack(ModItems.BASIC_FIELD.get());
+        capped.set(ModComponents.ENERGY.get(), 1_000_000 - 50);
+        capped.set(ModComponents.FIELD_BURN.get(), 3);
+        owner.getInventory().setItem(0, capped);
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(0)), 1_000_000, "generation stops at the buffer cap");
+        helper.succeed();
+    }
+
+    public static void fieldBasic(GameTestHelper helper) {
+        ServerPlayer owner = player(helper);
+        ItemStack generator = new ItemStack(ModItems.BASIC_FIELD.get());
+        generator.set(ModComponents.ENERGY.get(), 10_000);
+        owner.getInventory().setItem(0, generator);
+        owner.getInventory().setItem(1, flux(0));
+        owner.getInventory().setItem(2, flux(50_000));
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(1)), 1_000, "only the lowest item was charged");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(2)), 50_000, "the fuller item was left alone");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(0)), 9_000, "the generator spent 1000 FE");
+        helper.succeed();
+    }
+
+    public static void fieldAdvanced(GameTestHelper helper) {
+        ServerPlayer owner = player(helper);
+        ItemStack generator = new ItemStack(ModItems.ADVANCED_FIELD.get());
+        generator.set(ModComponents.ENERGY.get(), 4_000);
+        owner.getInventory().setItem(0, generator);
+        owner.getInventory().setItem(9, flux(0));
+        owner.getInventory().setItem(10, flux(0));
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(9)) + energy(owner.getInventory().getItem(10)), 4_000, "advanced spends at most 4000 FE");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(9)), 2_000, "the first empty item got half");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(10)), 2_000, "the second empty item got half");
+
+        ItemStack limited = new ItemStack(ModItems.ADVANCED_FIELD.get());
+        limited.set(ModComponents.ENERGY.get(), 4_000);
+        limited.set(ModComponents.TOOL_SETTINGS.get(), FieldGenerators.settings(limited).toggle(ToolSettings.FIELD_HOTBAR));
+        owner.getInventory().setItem(0, limited);
+        owner.getInventory().setItem(1, flux(0));
+        owner.getInventory().setItem(9, flux(0));
+        owner.getInventory().setItem(10, ItemStack.EMPTY);
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(1)), 0, "a disabled hotbar is not charged");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(9)), 4_000, "the main-inventory item took the whole budget");
+        helper.succeed();
+    }
+
+    public static void fieldOff(GameTestHelper helper) {
+        ServerPlayer owner = player(helper);
+        ItemStack generator = new ItemStack(ModItems.BASIC_FIELD.get());
+        generator.set(ModComponents.ENERGY.get(), 10_000);
+        generator.set(ModComponents.TOOL_SETTINGS.get(), FieldGenerators.settings(generator).toggle(ToolSettings.FIELD_ON));
+        owner.getInventory().setItem(0, generator);
+        owner.getInventory().setItem(1, flux(0));
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(1)), 0, "toggle off does not charge");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(0)), 10_000, "toggle off does not spend FE");
+
+        ItemStack active = new ItemStack(ModItems.BASIC_FIELD.get());
+        active.set(ModComponents.ENERGY.get(), 10_000);
+        ItemStack other = new ItemStack(ModItems.ADVANCED_FIELD.get());
+        owner.getInventory().setItem(0, active);
+        owner.getInventory().setItem(1, other);
+        owner.getInventory().setItem(2, flux(0));
+        FieldGenerators.tick(owner);
+        helper.assertValueEqual(energy(owner.getInventory().getItem(1)), 0, "another field generator is not charged");
+        helper.assertValueEqual(energy(owner.getInventory().getItem(2)), 1_000, "a normal FE item still charges");
+        helper.succeed();
+    }
+
+    private static ItemStack flux(int stored) {
+        ItemStack stack = new ItemStack(ModItems.FLUX_PICKAXE.get());
+        stack.set(ModComponents.ENERGY.get(), stored);
+        return stack;
+    }
+
+    private static int energy(ItemStack stack) {
+        return stack.getOrDefault(ModComponents.ENERGY.get(), 0);
     }
 
     private static void placePair(GameTestHelper helper, BlockPos machine, BlockPos otherMachine, java.util.UUID channel, ServerPlayer owner) {

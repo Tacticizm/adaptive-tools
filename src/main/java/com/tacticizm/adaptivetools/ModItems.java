@@ -16,6 +16,7 @@ import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.equipment.ArmorType;
 import com.tacticizm.adaptivetools.cable.WrenchItem;
 import com.tacticizm.adaptivetools.wireless.CarriedReceiverItem;
+import com.tacticizm.adaptivetools.wireless.FieldGeneratorItem;
 
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -96,6 +97,8 @@ public final class ModItems {
     public static final DeferredItem<Item> WATER_WALKING_MODULE = plain("water_walking_module");
     public static final DeferredItem<WrenchItem> WRENCH = ITEMS.registerItem("wrench", props -> new WrenchItem(props.stacksTo(1)));
     public static final DeferredItem<CarriedReceiverItem> CARRIED_RECEIVER = ITEMS.registerItem("wireless_energy_receiver", props -> new CarriedReceiverItem(props));
+    public static final DeferredItem<FieldGeneratorItem> BASIC_FIELD = ITEMS.registerItem("basic_field_generator", props -> new FieldGeneratorItem(false, props));
+    public static final DeferredItem<FieldGeneratorItem> ADVANCED_FIELD = ITEMS.registerItem("advanced_field_generator", props -> new FieldGeneratorItem(true, props));
 
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> TAB = TABS.register("main", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.adaptivetools"))
@@ -136,6 +139,8 @@ public final class ModItems {
                 output.accept(ModBlocks.TRANSMITTER_ITEM.get());
                 output.accept(ModBlocks.RECEIVER_ITEM.get());
                 output.accept(CARRIED_RECEIVER.get());
+                output.accept(BASIC_FIELD.get());
+                output.accept(ADVANCED_FIELD.get());
                 output.accept(ModBlocks.LIGHT_CABLE_ITEM.get());
                 output.accept(ModBlocks.MEDIUM_CABLE_ITEM.get());
                 output.accept(ModBlocks.HEAVY_CABLE_ITEM.get());

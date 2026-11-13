@@ -20,6 +20,7 @@ public final class ArmorKeybinds {
     private static final KeyMapping ELYTRA = key("key.adaptivetools.elytra");
     private static final KeyMapping FLIGHT = key("key.adaptivetools.flight");
     private static final KeyMapping SHIELD = key("key.adaptivetools.shield");
+    private static final KeyMapping FIELD = key("key.adaptivetools.field_generator");
 
     private ArmorKeybinds() {}
 
@@ -29,6 +30,7 @@ public final class ArmorKeybinds {
         event.register(ELYTRA);
         event.register(FLIGHT);
         event.register(SHIELD);
+        event.register(FIELD);
     }
 
     public static void onTick(ClientTickEvent.Post event) {
@@ -40,6 +42,7 @@ public final class ArmorKeybinds {
         click(ELYTRA, ToolSettings.ELYTRA_GLIDE);
         click(FLIGHT, ToolSettings.CREATIVE_FLIGHT);
         click(SHIELD, ToolSettings.ENERGY_SHIELD);
+        click(FIELD, ToolSettings.FIELD_ON);
     }
 
     public static String label(int bit) {
@@ -78,6 +81,9 @@ public final class ArmorKeybinds {
         }
         if (bit == ToolSettings.ENERGY_SHIELD) {
             return SHIELD;
+        }
+        if (bit == ToolSettings.FIELD_ON) {
+            return FIELD;
         }
         return null;
     }

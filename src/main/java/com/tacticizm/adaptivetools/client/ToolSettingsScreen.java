@@ -16,6 +16,8 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import com.tacticizm.adaptivetools.AdaptiveArmorItem;
+import com.tacticizm.adaptivetools.wireless.FieldGeneratorItem;
+import com.tacticizm.adaptivetools.wireless.FieldGenerators;
 import com.tacticizm.adaptivetools.AdaptiveAxeItem;
 import com.tacticizm.adaptivetools.AdaptiveHoeItem;
 import com.tacticizm.adaptivetools.AdaptiveShovelItem;
@@ -49,12 +51,17 @@ public class ToolSettingsScreen extends Screen {
 
     public ToolSettingsScreen(Player player, InteractionHand hand) {
         super(Component.translatable(player.getItemInHand(hand).getItem() instanceof AdaptiveArmorItem
+                || player.getItemInHand(hand).getItem() instanceof FieldGeneratorItem
                 ? "adaptivetools.screen.item_settings"
                 : "adaptivetools.screen.tool_settings"));
         this.slot = ModNetworking.slotFor(player, hand);
         ItemStack stack = player.getItemInHand(hand);
-        ToolTier tier = ((TieredTool) stack.getItem()).tier();
-        this.settings = ToolSettings.of(stack, tier);
+        if (stack.getItem() instanceof FieldGeneratorItem) {
+            this.settings = FieldGenerators.settings(stack);
+        } else {
+            ToolTier tier = ((TieredTool) stack.getItem()).tier();
+            this.settings = ToolSettings.of(stack, tier);
+        }
     }
 
     public static void open(Player player, InteractionHand hand) {
@@ -67,6 +74,13 @@ public class ToolSettingsScreen extends Screen {
         int left = (this.width - IMAGE_WIDTH) / 2;
         int top = (this.height - IMAGE_HEIGHT) / 2;
         ItemStack stack = currentStack();
+        if (stack.getItem() instanceof FieldGeneratorItem generator) {
+            field(left, top, generator);
+            addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
+                    .bounds(left + 176, top + 112, 64, 16)
+                    .build());
+            return;
+        }
         if (!(stack.getItem() instanceof TieredTool tool)) {
             return;
         }
@@ -88,6 +102,24 @@ public class ToolSettingsScreen extends Screen {
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
                 .bounds(left + 176, top + 112, 64, 16)
                 .build());
+    }
+
+    private void field(int left, int top, FieldGeneratorItem generator) {
+        ability(left, top, 0, ToolSettings.FIELD_ON, settings.fieldOn(), "On");
+        if (generator.advanced()) {
+            toggle(left, top, 1, 0, COLUMN, settings.fieldHotbar() ? "Hotbar: On" : "Hotbar: Off", () -> {
+                settings = settings.toggle(ToolSettings.FIELD_HOTBAR);
+                send();
+            });
+            toggle(left, top, 1, 1, COLUMN, settings.fieldMain() ? "Main: On" : "Main: Off", () -> {
+                settings = settings.toggle(ToolSettings.FIELD_MAIN);
+                send();
+            });
+            toggle(left, top, 2, 0, COLUMN, settings.fieldArmor() ? "Armor: On" : "Armor: Off", () -> {
+                settings = settings.toggle(ToolSettings.FIELD_ARMOR);
+                send();
+            });
+        }
     }
 
     private void armor(int left, int top, AdaptiveArmorItem armor) {
@@ -319,6 +351,10 @@ public class ToolSettingsScreen extends Screen {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
         ItemStack stack = currentStack();
+        if (stack.getItem() instanceof FieldGeneratorItem) {
+            graphics.text(this.font, stack.getHoverName(), left + 12, top + 8, 0xFF2A2A32, false);
+            return;
+        }
         if (!(stack.getItem() instanceof TieredTool tool)) {
             return;
         }

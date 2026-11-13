@@ -24,6 +24,7 @@ import com.tacticizm.adaptivetools.cable.CableMenu;
 import com.tacticizm.adaptivetools.cable.CableTier;
 import com.tacticizm.adaptivetools.testing.TestBufferBlock;
 import com.tacticizm.adaptivetools.testing.TestBufferBlockEntity;
+import com.tacticizm.adaptivetools.wireless.FieldGeneratorMenu;
 import com.tacticizm.adaptivetools.wireless.GeneratorBlock;
 import com.tacticizm.adaptivetools.wireless.GeneratorBlockEntity;
 import com.tacticizm.adaptivetools.wireless.GeneratorMenu;
@@ -98,6 +99,7 @@ public final class ModBlocks {
         var blockEntity = inventory.player.level().getBlockEntity(pos);
         return new ReceiverMenu(id, inventory, blockEntity instanceof ReceiverBlockEntity found ? found : null);
     }));
+    public static final DeferredHolder<MenuType<?>, MenuType<FieldGeneratorMenu>> FIELD_MENU = MENUS.register("field_generator", () -> IMenuTypeExtension.create((id, inventory, buf) -> new FieldGeneratorMenu(id, inventory, buf.readVarInt())));
 
     private ModBlocks() {}
 
