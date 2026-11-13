@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:tempered_copper_ingot",
+    "adaptivetools:tempered_copper_ingot",
+    "minecraft:iron_ingot",
+    "minecraft:amethyst_shard"
+  ],
+  "result": {
+    "id": "adaptivetools:resonant_alloy_ingot"
+  }
+}

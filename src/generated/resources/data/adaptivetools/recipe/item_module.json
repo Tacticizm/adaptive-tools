@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:chest",
+    "adaptivetools:tempered_copper_ingot"
+  ],
+  "result": {
+    "id": "adaptivetools:item_module"
+  }
+}

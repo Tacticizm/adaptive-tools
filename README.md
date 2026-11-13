@@ -1,6 +1,6 @@
 # Adaptive Tools
 
-NeoForge mod for Minecraft Java Edition. Tiered tools, armor, and a wireless power network. The current build has alloy ingots, pickaxes, area mining, and Light, Medium, and Heavy cables.
+NeoForge mod for Minecraft Java Edition. Tiered tools, armor, and a wireless power network. The current build has the five alloys, tools, armor, smithing upgrades, cables, and modules.
 
 - Minecraft `26.1.2`
 - Java `25`
@@ -13,7 +13,7 @@ NeoForge mod for Minecraft Java Edition. Tiered tools, armor, and a wireless pow
 ./gradlew build
 ```
 
-The mod jar is written to `build/libs/adaptivetools-0.4.0.jar`.
+The mod jar is written to `build/libs/adaptivetools-0.5.0.jar`.
 
 Game tests:
 
@@ -34,4 +34,4 @@ Client and dedicated server:
 ./gradlew runServer
 ```
 
-Item, armor, block, cable, and screen textures in `assets/adaptivetools/textures` are the approved finals. Axes, shovels, hoes, swords, armor, smithing templates, and the charging blocks are art only until those items and blocks are added. Baby armor sheets are wired in each tier's equipment JSON. Sprite positions for the unbuilt screens are in `docs/gui_uv.json`.
+Item, armor, block, cable, and screen textures in `assets/adaptivetools/textures` are the approved finals. Storage blocks reuse the ingot texture. Generator, transmitter, and receiver faces are still art only. Baby armor sheets are wired in each tier's equipment JSON. Sprite positions for the unbuilt screens are in `docs/gui_uv.json`.

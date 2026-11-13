@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:diamond",
+    "adaptivetools:tempered_copper_ingot",
+    "minecraft:copper_block"
+  ],
+  "result": {
+    "id": "adaptivetools:resonant_alloy_upgrade_smithing_template"
+  }
+}

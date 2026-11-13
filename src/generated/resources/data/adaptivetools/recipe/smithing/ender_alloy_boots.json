@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:ender_alloy_ingot",
+  "base": "adaptivetools:flux_alloy_boots",
+  "result": {
+    "id": "adaptivetools:ender_alloy_boots"
+  },
+  "template": "adaptivetools:ender_alloy_upgrade_smithing_template"
+}

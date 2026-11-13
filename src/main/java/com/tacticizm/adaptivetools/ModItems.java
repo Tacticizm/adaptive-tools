@@ -12,6 +12,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SmithingTemplateItem;
 import net.minecraft.world.item.equipment.ArmorType;
 import com.tacticizm.adaptivetools.cable.WrenchItem;
 
@@ -47,6 +48,11 @@ public final class ModItems {
     public static final DeferredItem<Item> EMBERSTEEL_INGOT = ingot(ToolTier.EMBERSTEEL);
     public static final DeferredItem<Item> FLUX_ALLOY_INGOT = ingot(ToolTier.FLUX_ALLOY);
     public static final DeferredItem<Item> ENDER_ALLOY_INGOT = ingot(ToolTier.ENDER_ALLOY);
+
+    public static final DeferredItem<SmithingTemplateItem> RESONANT_UPGRADE = template(ToolTier.RESONANT_ALLOY);
+    public static final DeferredItem<SmithingTemplateItem> EMBERSTEEL_UPGRADE = template(ToolTier.EMBERSTEEL);
+    public static final DeferredItem<SmithingTemplateItem> FLUX_UPGRADE = template(ToolTier.FLUX_ALLOY);
+    public static final DeferredItem<SmithingTemplateItem> ENDER_UPGRADE = template(ToolTier.ENDER_ALLOY);
 
     public static final DeferredItem<AdaptivePickaxeItem> TEMPERED_COPPER_PICKAXE = pickaxe(ToolTier.TEMPERED_COPPER);
     public static final DeferredItem<AdaptivePickaxeItem> RESONANT_PICKAXE = pickaxe(ToolTier.RESONANT_ALLOY);
@@ -100,6 +106,13 @@ public final class ModItems {
                 output.accept(FLUX_ALLOY_INGOT.get());
                 output.accept(ENDER_ALLOY_INGOT.get());
                 for (ToolTier tier : ToolTier.values()) {
+                    output.accept(ModBlocks.storageItem(tier).get());
+                }
+                output.accept(RESONANT_UPGRADE.get());
+                output.accept(EMBERSTEEL_UPGRADE.get());
+                output.accept(FLUX_UPGRADE.get());
+                output.accept(ENDER_UPGRADE.get());
+                for (ToolTier tier : ToolTier.values()) {
                     output.accept(pickaxeFor(tier).get());
                     output.accept(axeFor(tier).get());
                     output.accept(shovelFor(tier).get());
@@ -129,6 +142,16 @@ public final class ModItems {
         return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, tier.id() + "_ingots"));
     }
 
+    public static DeferredItem<SmithingTemplateItem> upgradeTemplate(ToolTier tier) {
+        return switch (tier) {
+            case RESONANT_ALLOY -> RESONANT_UPGRADE;
+            case EMBERSTEEL -> EMBERSTEEL_UPGRADE;
+            case FLUX_ALLOY -> FLUX_UPGRADE;
+            case ENDER_ALLOY -> ENDER_UPGRADE;
+            case TEMPERED_COPPER -> throw new IllegalArgumentException(tier.id());
+        };
+    }
+
     public static DeferredItem<Item> ingotFor(ToolTier tier) {
         return switch (tier) {
             case TEMPERED_COPPER -> TEMPERED_COPPER_INGOT;
@@ -147,6 +170,28 @@ public final class ModItems {
             case FLUX_ALLOY -> FLUX_PICKAXE;
             case ENDER_ALLOY -> ENDER_PICKAXE;
         };
+    }
+
+    private static final List<Identifier> TEMPLATE_ICONS = List.of(
+            Identifier.withDefaultNamespace("container/slot/helmet"),
+            Identifier.withDefaultNamespace("container/slot/chestplate"),
+            Identifier.withDefaultNamespace("container/slot/leggings"),
+            Identifier.withDefaultNamespace("container/slot/boots"),
+            Identifier.withDefaultNamespace("container/slot/pickaxe"),
+            Identifier.withDefaultNamespace("container/slot/axe"),
+            Identifier.withDefaultNamespace("container/slot/shovel"),
+            Identifier.withDefaultNamespace("container/slot/hoe"),
+            Identifier.withDefaultNamespace("container/slot/sword"));
+
+    private static DeferredItem<SmithingTemplateItem> template(ToolTier tier) {
+        return ITEMS.registerItem(tier.id() + "_upgrade_smithing_template", props -> new SmithingTemplateItem(
+                Component.translatable("item.adaptivetools.smithing_template.applies_to"),
+                Component.translatable("item.adaptivetools.smithing_template.ingredients"),
+                Component.translatable("item.adaptivetools.smithing_template.base_slot"),
+                Component.translatable("item.adaptivetools.smithing_template.additions_slot"),
+                TEMPLATE_ICONS,
+                List.of(Identifier.withDefaultNamespace("container/slot/ingot")),
+                props.rarity(Rarity.UNCOMMON)));
     }
 
     private static DeferredItem<Item> ingot(ToolTier tier) {

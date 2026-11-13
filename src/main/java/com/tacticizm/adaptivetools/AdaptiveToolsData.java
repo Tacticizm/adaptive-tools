@@ -55,6 +55,10 @@ public final class AdaptiveToolsData {
                 writes.add(itemModel(cache, tier.id() + "_chestplate", "minecraft:item/generated"));
                 writes.add(itemModel(cache, tier.id() + "_leggings", "minecraft:item/generated"));
                 writes.add(itemModel(cache, tier.id() + "_boots", "minecraft:item/generated"));
+                writes.add(storageBlock(cache, tier.id()));
+            }
+            for (ToolTier tier : List.of(ToolTier.RESONANT_ALLOY, ToolTier.EMBERSTEEL, ToolTier.FLUX_ALLOY, ToolTier.ENDER_ALLOY)) {
+                writes.add(itemModel(cache, tier.id() + "_upgrade_smithing_template", "minecraft:item/generated"));
             }
             for (String id : List.of(
                     "power_module",
@@ -70,10 +74,17 @@ public final class AdaptiveToolsData {
             for (CableTier tier : CableTier.values()) {
                 writes.add(blockItem(cache, tier.id()));
             }
-            writes.add(blockTag(cache, "minecraft", "mineable/pickaxe", java.util.List.of(
+            List<String> storageBlocks = new ArrayList<>();
+            for (ToolTier tier : ToolTier.values()) {
+                storageBlocks.add("adaptivetools:" + tier.id() + "_block");
+            }
+            List<String> pickaxeMineable = new ArrayList<>(List.of(
                     "adaptivetools:light_cable",
                     "adaptivetools:medium_cable",
-                    "adaptivetools:heavy_cable")));
+                    "adaptivetools:heavy_cable"));
+            pickaxeMineable.addAll(storageBlocks);
+            writes.add(blockTag(cache, "minecraft", "mineable/pickaxe", pickaxeMineable));
+            writes.add(blockTag(cache, "minecraft", "needs_stone_tool", storageBlocks));
 
             writes.add(tag(cache, "minecraft", "pickaxes", List.of(
                     ModItems.TEMPERED_COPPER_PICKAXE,
@@ -95,6 +106,8 @@ public final class AdaptiveToolsData {
             writes.add(armorTag(cache, "foot_armor", net.minecraft.world.item.equipment.ArmorType.BOOTS));
             for (ToolTier tier : ToolTier.values()) {
                 writes.add(tag(cache, AdaptiveTools.MOD_ID, tier.id() + "_ingots", List.of(ModItems.ingotFor(tier))));
+                writes.add(tag(cache, "c", "ingots/" + tier.id(), List.of(ModItems.ingotFor(tier))));
+                writes.add(tag(cache, "c", "storage_blocks/" + tier.id(), List.of(ModBlocks.storageItem(tier))));
             }
             return CompletableFuture.allOf(writes.toArray(CompletableFuture[]::new));
         }
@@ -116,6 +129,46 @@ public final class AdaptiveToolsData {
             return CompletableFuture.allOf(
                     DataProvider.saveStable(cache, model, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/models/item/" + id + ".json")),
                     DataProvider.saveStable(cache, definition, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/items/" + id + ".json")));
+        }
+
+        private CompletableFuture<?> storageBlock(CachedOutput cache, String tierId) {
+            String id = tierId + "_block";
+            JsonObject model = new JsonObject();
+            model.addProperty("parent", "minecraft:block/cube_all");
+            JsonObject textures = new JsonObject();
+            textures.addProperty("all", AdaptiveTools.MOD_ID + ":item/" + tierId + "_ingot");
+            model.add("textures", textures);
+            JsonObject state = new JsonObject();
+            JsonObject variants = new JsonObject();
+            JsonObject variant = new JsonObject();
+            variant.addProperty("model", AdaptiveTools.MOD_ID + ":block/" + id);
+            variants.add("", variant);
+            state.add("variants", variants);
+            JsonObject loot = new JsonObject();
+            loot.addProperty("type", "minecraft:block");
+            JsonArray pools = new JsonArray();
+            JsonObject pool = new JsonObject();
+            pool.addProperty("rolls", 1);
+            JsonArray entries = new JsonArray();
+            JsonObject entry = new JsonObject();
+            entry.addProperty("type", "minecraft:item");
+            entry.addProperty("name", AdaptiveTools.MOD_ID + ":" + id);
+            entries.add(entry);
+            pool.add("entries", entries);
+            pools.add(pool);
+            loot.add("pools", pools);
+
+            JsonObject definition = new JsonObject();
+            JsonObject modelRef = new JsonObject();
+            modelRef.addProperty("type", "minecraft:model");
+            modelRef.addProperty("model", AdaptiveTools.MOD_ID + ":block/" + id);
+            definition.add("model", modelRef);
+            var root = output.getOutputFolder();
+            return CompletableFuture.allOf(
+                    DataProvider.saveStable(cache, model, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/models/block/" + id + ".json")),
+                    DataProvider.saveStable(cache, state, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/blockstates/" + id + ".json")),
+                    DataProvider.saveStable(cache, definition, root.resolve("assets/" + AdaptiveTools.MOD_ID + "/items/" + id + ".json")),
+                    DataProvider.saveStable(cache, loot, root.resolve("data/" + AdaptiveTools.MOD_ID + "/loot_table/blocks/" + id + ".json")));
         }
 
         private CompletableFuture<?> blockItem(CachedOutput cache, String id) {

@@ -1,8 +1,12 @@
 package com.tacticizm.adaptivetools;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,6 +34,16 @@ public final class ModBlocks {
     public static final DeferredBlock<CableBlock> MEDIUM_CABLE = cable(CableTier.MEDIUM);
     public static final DeferredBlock<CableBlock> HEAVY_CABLE = cable(CableTier.HEAVY);
     public static final DeferredBlock<TestBufferBlock> TEST_BUFFER = BLOCKS.registerBlock("test_buffer", TestBufferBlock::new, props -> props.strength(0.5F).noLootTable());
+    private static final Map<ToolTier, DeferredBlock<Block>> STORAGE = new EnumMap<>(ToolTier.class);
+    private static final Map<ToolTier, DeferredItem<BlockItem>> STORAGE_ITEMS = new EnumMap<>(ToolTier.class);
+
+    static {
+        for (ToolTier tier : ToolTier.values()) {
+            DeferredBlock<Block> block = BLOCKS.registerBlock(tier.id() + "_block", Block::new, props -> props.strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops());
+            STORAGE.put(tier, block);
+            STORAGE_ITEMS.put(tier, ModItems.ITEMS.registerSimpleBlockItem(block));
+        }
+    }
 
     public static final DeferredItem<BlockItem> LIGHT_CABLE_ITEM = ModItems.ITEMS.registerSimpleBlockItem(LIGHT_CABLE);
     public static final DeferredItem<BlockItem> MEDIUM_CABLE_ITEM = ModItems.ITEMS.registerSimpleBlockItem(MEDIUM_CABLE);
@@ -49,6 +63,14 @@ public final class ModBlocks {
     }));
 
     private ModBlocks() {}
+
+    public static DeferredBlock<Block> storage(ToolTier tier) {
+        return STORAGE.get(tier);
+    }
+
+    public static DeferredItem<BlockItem> storageItem(ToolTier tier) {
+        return STORAGE_ITEMS.get(tier);
+    }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.Energy.BLOCK, TEST_BUFFER_BE.get(), (be, side) -> be.energy);

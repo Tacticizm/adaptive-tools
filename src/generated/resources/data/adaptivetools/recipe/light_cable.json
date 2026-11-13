@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:tempered_copper_ingot",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "count": 16,
+    "id": "adaptivetools:light_cable"
+  }
+}

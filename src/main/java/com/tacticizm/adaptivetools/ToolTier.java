@@ -18,14 +18,6 @@ import net.minecraft.world.level.block.Block;
  * Resonant (3×3), Flux (5×5) and Ender (7×7). Tempered Copper and Embersteel are not given an area
  * cap, so they stay 1×1. Smaller odd sizes are selectable up to the cap.
  *
- * <p>TODO(embersteel): lava repair is a material property, not a learned ability. Agreed outline is
- * throw the tool into a lava source, it floats while repairing, and on finish the source becomes
- * obsidian and the tool returns to its owner. Timing, rate, and multi-tool behavior are still open,
- * so nothing is implemented yet.
- *
- * <p>TODO(smithing): tier upgrades should be smithing transforms that keep enchantments, energy, and
- * tool settings. 26.1 smithing still requires a template item, and the template plus the ingot
- * recipes are unconfirmed, so no upgrade recipe is registered yet.
  */
 public enum ToolTier {
     TEMPERED_COPPER("tempered_copper", "Tempered Copper", 200, 5.0F, 1.0F, 12, BlockTags.INCORRECT_FOR_IRON_TOOL, 1, 0),

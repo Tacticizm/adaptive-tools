@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:resonant_alloy_ingot",
+  "base": "adaptivetools:tempered_copper_hoe",
+  "result": {
+    "id": "adaptivetools:resonant_alloy_hoe"
+  },
+  "template": "adaptivetools:resonant_alloy_upgrade_smithing_template"
+}

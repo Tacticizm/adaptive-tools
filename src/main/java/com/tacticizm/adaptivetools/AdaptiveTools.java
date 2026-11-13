@@ -31,6 +31,7 @@ public class AdaptiveTools {
         CableGameTests.FUNCTIONS.register(modEventBus);
         ToolGameTests.FUNCTIONS.register(modEventBus);
         ArmorGameTests.FUNCTIONS.register(modEventBus);
+        ProgressionGameTests.FUNCTIONS.register(modEventBus);
 
         modEventBus.addListener(ModEnergy::registerCapabilities);
         modEventBus.addListener(ModBlocks::registerCapabilities);
@@ -41,6 +42,7 @@ public class AdaptiveTools {
         modEventBus.addListener(CableGameTests::registerTests);
         modEventBus.addListener(ToolGameTests::registerTests);
         modEventBus.addListener(ArmorGameTests::registerTests);
+        modEventBus.addListener(ProgressionGameTests::registerTests);
 
         NeoForge.EVENT_BUS.addListener(ToolBreakEvents::onBreak);
         NeoForge.EVENT_BUS.addListener(ToolDropEvents::onDrops);
@@ -51,6 +53,7 @@ public class AdaptiveTools {
         NeoForge.EVENT_BUS.addListener(SwordCombat::onShield);
         NeoForge.EVENT_BUS.addListener(ArmorAbilities::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(ArmorAbilities::onDamage);
+        NeoForge.EVENT_BUS.addListener(LavaRepair::onTick);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onTooltip);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onLevelTick);
 

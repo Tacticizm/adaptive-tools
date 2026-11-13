@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "adaptivetools:embersteel_block"
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

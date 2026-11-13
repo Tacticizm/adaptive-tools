@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:resonant_alloy_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "adaptivetools:resonant_alloy_ingot"
+  }
+}

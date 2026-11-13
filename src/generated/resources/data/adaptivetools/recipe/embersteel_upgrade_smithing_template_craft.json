@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:diamond",
+    "adaptivetools:resonant_alloy_ingot",
+    "minecraft:netherrack"
+  ],
+  "result": {
+    "id": "adaptivetools:embersteel_upgrade_smithing_template"
+  }
+}
