@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:embersteel_ingot",
+    "minecraft:ender_pearl",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "adaptivetools:wireless_energy_receiver"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "adaptivetools:block/machine_receiver_side",
+    "up": "adaptivetools:block/machine_receiver_side",
+    "north": "adaptivetools:block/machine_receiver_front_unassigned",
+    "south": "adaptivetools:block/machine_receiver_back",
+    "west": "adaptivetools:block/machine_receiver_side",
+    "east": "adaptivetools:block/machine_receiver_side",
+    "particle": "adaptivetools:block/machine_receiver_side"
+  }
+}

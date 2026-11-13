@@ -24,6 +24,15 @@ import com.tacticizm.adaptivetools.cable.CableMenu;
 import com.tacticizm.adaptivetools.cable.CableTier;
 import com.tacticizm.adaptivetools.testing.TestBufferBlock;
 import com.tacticizm.adaptivetools.testing.TestBufferBlockEntity;
+import com.tacticizm.adaptivetools.wireless.GeneratorBlock;
+import com.tacticizm.adaptivetools.wireless.GeneratorBlockEntity;
+import com.tacticizm.adaptivetools.wireless.GeneratorMenu;
+import com.tacticizm.adaptivetools.wireless.ReceiverBlock;
+import com.tacticizm.adaptivetools.wireless.ReceiverBlockEntity;
+import com.tacticizm.adaptivetools.wireless.ReceiverMenu;
+import com.tacticizm.adaptivetools.wireless.TransmitterBlock;
+import com.tacticizm.adaptivetools.wireless.TransmitterBlockEntity;
+import com.tacticizm.adaptivetools.wireless.TransmitterMenu;
 
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(AdaptiveTools.MOD_ID);
@@ -49,10 +58,23 @@ public final class ModBlocks {
     public static final DeferredItem<BlockItem> MEDIUM_CABLE_ITEM = ModItems.ITEMS.registerSimpleBlockItem(MEDIUM_CABLE);
     public static final DeferredItem<BlockItem> HEAVY_CABLE_ITEM = ModItems.ITEMS.registerSimpleBlockItem(HEAVY_CABLE);
 
+    public static final DeferredBlock<GeneratorBlock> GENERATOR = BLOCKS.registerBlock("base_generator", GeneratorBlock::new, props -> props.strength(3.5F).sound(SoundType.METAL).noLootTable());
+    public static final DeferredBlock<TransmitterBlock> TRANSMITTER = BLOCKS.registerBlock("wireless_energy_transmitter", TransmitterBlock::new, props -> props.strength(3.5F).sound(SoundType.METAL).noLootTable());
+    public static final DeferredBlock<ReceiverBlock> RECEIVER = BLOCKS.registerBlock("machine_receiver", ReceiverBlock::new, props -> props.strength(3.5F).sound(SoundType.METAL).noLootTable());
+    public static final DeferredItem<BlockItem> GENERATOR_ITEM = ModItems.ITEMS.registerSimpleBlockItem(GENERATOR);
+    public static final DeferredItem<BlockItem> TRANSMITTER_ITEM = ModItems.ITEMS.registerSimpleBlockItem(TRANSMITTER);
+    public static final DeferredItem<BlockItem> RECEIVER_ITEM = ModItems.ITEMS.registerSimpleBlockItem(RECEIVER);
+
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<CableBlockEntity>> CABLE_BE = BLOCK_ENTITIES.register("cable",
             () -> new BlockEntityType<>(CableBlockEntity::new, LIGHT_CABLE.get(), MEDIUM_CABLE.get(), HEAVY_CABLE.get()));
     public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TestBufferBlockEntity>> TEST_BUFFER_BE = BLOCK_ENTITIES.register("test_buffer",
             () -> new BlockEntityType<>(TestBufferBlockEntity::new, TEST_BUFFER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<GeneratorBlockEntity>> GENERATOR_BE = BLOCK_ENTITIES.register("base_generator",
+            () -> new BlockEntityType<>(GeneratorBlockEntity::new, GENERATOR.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<TransmitterBlockEntity>> TRANSMITTER_BE = BLOCK_ENTITIES.register("wireless_energy_transmitter",
+            () -> new BlockEntityType<>(TransmitterBlockEntity::new, TRANSMITTER.get()));
+    public static final DeferredHolder<BlockEntityType<?>, BlockEntityType<ReceiverBlockEntity>> RECEIVER_BE = BLOCK_ENTITIES.register("machine_receiver",
+            () -> new BlockEntityType<>(ReceiverBlockEntity::new, RECEIVER.get()));
 
     public static final DeferredHolder<MenuType<?>, MenuType<CableMenu>> CABLE_MENU = MENUS.register("cable", () -> IMenuTypeExtension.create((id, inventory, buf) -> {
         var pos = buf.readBlockPos();
@@ -60,6 +82,21 @@ public final class ModBlocks {
         var blockEntity = inventory.player.level().getBlockEntity(pos);
         CableBlockEntity cable = blockEntity instanceof CableBlockEntity found ? found : null;
         return new CableMenu(id, inventory, cable, face);
+    }));
+    public static final DeferredHolder<MenuType<?>, MenuType<GeneratorMenu>> GENERATOR_MENU = MENUS.register("base_generator", () -> IMenuTypeExtension.create((id, inventory, buf) -> {
+        var pos = buf.readBlockPos();
+        var blockEntity = inventory.player.level().getBlockEntity(pos);
+        return new GeneratorMenu(id, inventory, blockEntity instanceof GeneratorBlockEntity found ? found : null);
+    }));
+    public static final DeferredHolder<MenuType<?>, MenuType<TransmitterMenu>> TRANSMITTER_MENU = MENUS.register("wireless_energy_transmitter", () -> IMenuTypeExtension.create((id, inventory, buf) -> {
+        var pos = buf.readBlockPos();
+        var blockEntity = inventory.player.level().getBlockEntity(pos);
+        return new TransmitterMenu(id, inventory, blockEntity instanceof TransmitterBlockEntity found ? found : null);
+    }));
+    public static final DeferredHolder<MenuType<?>, MenuType<ReceiverMenu>> RECEIVER_MENU = MENUS.register("machine_receiver", () -> IMenuTypeExtension.create((id, inventory, buf) -> {
+        var pos = buf.readBlockPos();
+        var blockEntity = inventory.player.level().getBlockEntity(pos);
+        return new ReceiverMenu(id, inventory, blockEntity instanceof ReceiverBlockEntity found ? found : null);
     }));
 
     private ModBlocks() {}
@@ -76,6 +113,8 @@ public final class ModBlocks {
         event.registerBlockEntity(Capabilities.Energy.BLOCK, TEST_BUFFER_BE.get(), (be, side) -> be.energy);
         event.registerBlockEntity(Capabilities.Item.BLOCK, TEST_BUFFER_BE.get(), (be, side) -> be.items);
         event.registerBlockEntity(Capabilities.Fluid.BLOCK, TEST_BUFFER_BE.get(), (be, side) -> be.fluids);
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, GENERATOR_BE.get(), (be, side) -> be.energyHandler);
+        event.registerBlockEntity(Capabilities.Energy.BLOCK, TRANSMITTER_BE.get(), (be, side) -> be.energyHandler);
     }
 
     private static DeferredBlock<CableBlock> cable(CableTier tier) {

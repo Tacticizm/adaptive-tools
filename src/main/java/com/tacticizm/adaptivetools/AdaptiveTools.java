@@ -31,21 +31,25 @@ public class AdaptiveTools {
         CableGameTests.FUNCTIONS.register(modEventBus);
         ToolGameTests.FUNCTIONS.register(modEventBus);
         ArmorGameTests.FUNCTIONS.register(modEventBus);
+        com.tacticizm.adaptivetools.wireless.WirelessGameTests.FUNCTIONS.register(modEventBus);
         ProgressionGameTests.FUNCTIONS.register(modEventBus);
 
         modEventBus.addListener(ModEnergy::registerCapabilities);
         modEventBus.addListener(ModBlocks::registerCapabilities);
         modEventBus.addListener(ModNetworking::register);
+        modEventBus.addListener(com.tacticizm.adaptivetools.wireless.WirelessMessages::register);
         modEventBus.addListener(AdaptiveToolsData::gatherClient);
         modEventBus.addListener(AdaptiveToolsData::gatherServer);
         modEventBus.addListener(PickaxeGameTests::registerTests);
         modEventBus.addListener(CableGameTests::registerTests);
         modEventBus.addListener(ToolGameTests::registerTests);
         modEventBus.addListener(ArmorGameTests::registerTests);
+        modEventBus.addListener(com.tacticizm.adaptivetools.wireless.WirelessGameTests::registerTests);
         modEventBus.addListener(ProgressionGameTests::registerTests);
 
         NeoForge.EVENT_BUS.addListener(ToolBreakEvents::onBreak);
         NeoForge.EVENT_BUS.addListener(ToolDropEvents::onDrops);
+        NeoForge.EVENT_BUS.addListener(com.tacticizm.adaptivetools.wireless.MachineBlock::onDrops);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onSweep);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onIncoming);
         NeoForge.EVENT_BUS.addListener(SwordCombat::onDamaged);
@@ -54,6 +58,7 @@ public class AdaptiveTools {
         NeoForge.EVENT_BUS.addListener(ArmorAbilities::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(ArmorAbilities::onDamage);
         NeoForge.EVENT_BUS.addListener(LavaRepair::onTick);
+        NeoForge.EVENT_BUS.addListener(AdaptiveTools::onServerTick);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onTooltip);
         NeoForge.EVENT_BUS.addListener(AdaptiveTools::onLevelTick);
 
@@ -78,6 +83,10 @@ public class AdaptiveTools {
         if (pick.tier().usesEnergy()) {
             event.getToolTip().add(Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), pick.tier().energyCapacity()));
         }
+    }
+
+    private static void onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) {
+        com.tacticizm.adaptivetools.wireless.WirelessNetwork.tick(event.getServer());
     }
 
     private static void onLevelTick(LevelTickEvent.Post event) {

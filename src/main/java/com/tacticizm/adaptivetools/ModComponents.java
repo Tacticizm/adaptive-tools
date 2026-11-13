@@ -32,6 +32,10 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Long>> SIPHON_READY = COMPONENTS.register("siphon_ready",
             () -> component(builder -> builder.persistent(Codec.LONG).networkSynchronized(ByteBufCodecs.VAR_LONG)));
 
+    /** Channel id on a carried receiver. Absent means Unassigned. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<String>> CHANNEL = COMPONENTS.register("channel",
+            () -> component(builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8)));
+
     private ModComponents() {}
 
     private static <T> DataComponentType<T> component(UnaryOperator<DataComponentType.Builder<T>> operator) {

@@ -62,6 +62,37 @@ public final class ModRecipes extends RecipeProvider.Runner {
                     .unlockedBy("has_tempered_copper", has(ModItems.TEMPERED_COPPER_INGOT.get()))
                     .save(output);
             mark(ModItems.WRENCH.get());
+            shaped(RecipeCategory.MISC, ModBlocks.GENERATOR_ITEM.get())
+                    .pattern("TTT")
+                    .pattern("TFT")
+                    .pattern("RRR")
+                    .define('T', ModItems.TEMPERED_COPPER_INGOT.get())
+                    .define('F', Items.FURNACE)
+                    .define('R', Items.REDSTONE)
+                    .unlockedBy("has_tempered_copper", has(ModItems.TEMPERED_COPPER_INGOT.get()))
+                    .save(output);
+            mark(ModBlocks.GENERATOR_ITEM.get());
+            shapeless(RecipeCategory.MISC, ModBlocks.TRANSMITTER_ITEM.get())
+                    .requires(ModItems.EMBERSTEEL_INGOT.get(), 2)
+                    .requires(Items.REDSTONE_BLOCK)
+                    .requires(Items.ENDER_PEARL)
+                    .unlockedBy("has_embersteel", has(ModItems.EMBERSTEEL_INGOT.get()))
+                    .save(output);
+            mark(ModBlocks.TRANSMITTER_ITEM.get());
+            shapeless(RecipeCategory.MISC, ModBlocks.RECEIVER_ITEM.get())
+                    .requires(ModItems.EMBERSTEEL_INGOT.get())
+                    .requires(Items.REDSTONE)
+                    .requires(Items.COPPER_INGOT)
+                    .unlockedBy("has_embersteel", has(ModItems.EMBERSTEEL_INGOT.get()))
+                    .save(output);
+            mark(ModBlocks.RECEIVER_ITEM.get());
+            shapeless(RecipeCategory.MISC, ModItems.CARRIED_RECEIVER.get())
+                    .requires(ModItems.EMBERSTEEL_INGOT.get())
+                    .requires(Items.ENDER_PEARL)
+                    .requires(Items.DIAMOND)
+                    .unlockedBy("has_embersteel", has(ModItems.EMBERSTEEL_INGOT.get()))
+                    .save(output);
+            mark(ModItems.CARRIED_RECEIVER.get());
             requireEveryItem();
         }
 

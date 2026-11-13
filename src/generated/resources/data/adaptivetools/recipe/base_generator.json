@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": "minecraft:furnace",
+    "R": "minecraft:redstone",
+    "T": "adaptivetools:tempered_copper_ingot"
+  },
+  "pattern": [
+    "TTT",
+    "TFT",
+    "RRR"
+  ],
+  "result": {
+    "id": "adaptivetools:base_generator"
+  }
+}

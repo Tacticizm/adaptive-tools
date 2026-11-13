@@ -1,0 +1,73 @@
+{
+  "variants": {
+    "facing=north,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned"
+    },
+    "facing=south,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned",
+      "y": 180
+    },
+    "facing=west,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned",
+      "y": 270
+    },
+    "facing=east,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned",
+      "y": 90
+    },
+    "facing=up,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned",
+      "x": 270
+    },
+    "facing=down,mode=unassigned": {
+      "model": "adaptivetools:block/machine_receiver_unassigned",
+      "x": 90
+    },
+    "facing=north,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle"
+    },
+    "facing=south,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle",
+      "y": 180
+    },
+    "facing=west,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle",
+      "y": 270
+    },
+    "facing=east,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle",
+      "y": 90
+    },
+    "facing=up,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle",
+      "x": 270
+    },
+    "facing=down,mode=idle": {
+      "model": "adaptivetools:block/machine_receiver_idle",
+      "x": 90
+    },
+    "facing=north,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active"
+    },
+    "facing=south,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active",
+      "y": 180
+    },
+    "facing=west,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active",
+      "y": 270
+    },
+    "facing=east,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active",
+      "y": 90
+    },
+    "facing=up,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active",
+      "x": 270
+    },
+    "facing=down,mode=active": {
+      "model": "adaptivetools:block/machine_receiver_active",
+      "x": 90
+    }
+  }
+}
