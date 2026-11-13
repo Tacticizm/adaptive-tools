@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:resonant_alloy_ingot",
+    "adaptivetools:resonant_alloy_ingot",
+    "minecraft:blaze_powder",
+    "minecraft:nether_brick"
+  ],
+  "result": {
+    "id": "adaptivetools:embersteel_ingot"
+  }
+}

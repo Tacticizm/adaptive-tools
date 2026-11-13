@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "adaptivetools:item/flux_alloy_leggings"
+  }
+}

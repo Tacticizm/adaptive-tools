@@ -1,0 +1,13 @@
+{
+  "layers": {
+    "humanoid": [
+      { "texture": "adaptivetools:resonant_alloy" }
+    ],
+    "humanoid_leggings": [
+      { "texture": "adaptivetools:resonant_alloy" }
+    ],
+    "humanoid_baby": [
+      { "texture": "adaptivetools:resonant_alloy" }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "adaptivetools:ender_alloy_ingot",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "II",
+    "IS",
+    " S"
+  ],
+  "result": {
+    "id": "adaptivetools:ender_alloy_axe"
+  }
+}

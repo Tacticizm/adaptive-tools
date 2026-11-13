@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:flux_alloy_ingot",
+  "base": "adaptivetools:embersteel_helmet",
+  "result": {
+    "id": "adaptivetools:flux_alloy_helmet"
+  },
+  "template": "adaptivetools:flux_alloy_upgrade_smithing_template"
+}

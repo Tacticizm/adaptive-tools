@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "adaptivetools:block/base_generator_bottom",
+    "up": "adaptivetools:block/base_generator_top",
+    "north": "adaptivetools:block/base_generator_front",
+    "south": "adaptivetools:block/base_generator_side",
+    "west": "adaptivetools:block/base_generator_side",
+    "east": "adaptivetools:block/base_generator_side",
+    "particle": "adaptivetools:block/base_generator_side"
+  }
+}

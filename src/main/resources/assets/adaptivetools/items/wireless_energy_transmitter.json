@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "adaptivetools:block/wireless_energy_transmitter"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "adaptivetools:item/flux_alloy_shovel"
+  }
+}

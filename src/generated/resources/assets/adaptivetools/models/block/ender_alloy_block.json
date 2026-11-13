@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "adaptivetools:item/ender_alloy_ingot"
+  }
+}
