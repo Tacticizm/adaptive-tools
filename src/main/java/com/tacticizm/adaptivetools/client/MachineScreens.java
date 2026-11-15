@@ -21,6 +21,7 @@ final class MachineScreens {
 
         GeneratorScreen(GeneratorMenu menu, Inventory inventory, Component title) {
             super(menu, inventory, title, 176, 176);
+            this.inventoryLabelY = 72;
         }
 
         @Override
@@ -42,6 +43,7 @@ final class MachineScreens {
 
         TransmitterScreen(TransmitterMenu menu, Inventory inventory, Component title) {
             super(menu, inventory, title, 176, 176);
+            this.inventoryLabelY = 72;
         }
 
         @Override
@@ -79,6 +81,11 @@ final class MachineScreens {
 
         ReceiverScreen(ReceiverMenu menu, Inventory inventory, Component title) {
             super(menu, inventory, title, 176, 176);
+        }
+
+        @Override
+        protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+            graphics.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
         }
 
         @Override

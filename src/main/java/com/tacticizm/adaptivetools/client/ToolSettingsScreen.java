@@ -42,11 +42,12 @@ public class ToolSettingsScreen extends Screen {
     private static final int[] SIZES = {1, 3, 5, 7};
     /** Dark content panel on tool_settings.png, in texture pixels. */
     private static final int PANEL_LEFT = 12;
-    private static final int PANEL_RIGHT = 160;
-    private static final int BUTTON_TOP = 42;
+    private static final int BUTTON_TOP = 40;
     private static final int BUTTON_HEIGHT = 16;
     private static final int ROW = 18;
     private static final int COLUMN = 74;
+    /** Four baked squares under the panel. A control covers one, or the square is painted out. */
+    private static final int[] CHECK_Y = {140, 158, 176, 194};
 
     private final int slot;
     private ToolSettings settings;
@@ -79,9 +80,7 @@ public class ToolSettingsScreen extends Screen {
         ItemStack stack = currentStack();
         if (stack.getItem() instanceof FieldGeneratorItem generator) {
             field(left, top, generator);
-            addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
-                    .bounds(left + 176, top + 112, 64, 16)
-                    .build());
+            done(left, top);
             return;
         }
         if (!(stack.getItem() instanceof TieredTool tool)) {
@@ -101,22 +100,32 @@ public class ToolSettingsScreen extends Screen {
         } else {
             digger(left, top, tier, false);
         }
-        xpControls(left, top);
-        // The narrow slot on the right of the texture, not the main panel.
+        xpControls(left, top, !(tool instanceof AdaptiveArmorItem));
+        done(left, top);
+    }
+
+    private void done(int left, int top) {
+        // Below the three right-hand panels, clear of the main panel.
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
-                .bounds(left + 176, top + 112, 64, 16)
+                .bounds(left + 176, top + 136, 70, 16)
                 .build());
     }
 
-    private void xpControls(int left, int top) {
+    private void xpControls(int left, int top, boolean enchants) {
         ToolProgress progress = currentStack().get(ModComponents.TOOL_PROGRESS.get());
         int efficiency = progress == null ? 0 : progress.efficiencyOn();
         int fortune = progress == null ? 0 : progress.fortuneOn();
         boolean silk = progress != null && progress.silkOn() > 0;
-        toggle(left, top, 0, 2, 64, "Eff " + efficiency, () -> act(ToolXp.EFF_UP));
-        toggle(left, top, 1, 2, 64, "Fort " + fortune, () -> act(ToolXp.FORT_UP));
-        toggle(left, top, 2, 2, 64, silk ? "Silk: On" : "Silk", () -> act(ToolXp.SILK));
-        toggle(left, top, 3, 2, 64, "Reset", () -> act(ToolXp.RESET));
+        if (enchants) {
+            enchant(left, top, 0, "Efficiency " + efficiency, () -> act(ToolXp.EFF_UP));
+            enchant(left, top, 1, "Fortune " + fortune, () -> act(ToolXp.FORT_UP));
+            enchant(left, top, 2, silk ? "Silk Touch: On" : "Silk Touch", () -> act(ToolXp.SILK));
+        }
+        enchant(left, top, enchants ? 3 : 0, "Reset", () -> act(ToolXp.RESET));
+    }
+
+    private void enchant(int left, int top, int index, String label, Runnable action) {
+        place(left + 8, top + CHECK_Y[index] - 4, 156, label, action);
     }
 
     private void act(int action) {
@@ -168,21 +177,26 @@ public class ToolSettingsScreen extends Screen {
         });
     }
 
-    private void digger(int left, int top, ToolTier tier, boolean shovel) {
-        for (int i = 0; i < SIZES.length; i++) {
-            int size = SIZES[i];
-            Button button = Button.builder(Component.literal(size + "x" + size), ignored -> {
-                settings = settings.withArea(true, size);
+    private int digger(int left, int top, ToolTier tier, boolean shovel) {
+        int row = 0;
+        if (tier.maxAreaSide() > 1) {
+            int shown = 0;
+            for (int size : SIZES) {
+                if (size > tier.maxAreaSide()) {
+                    continue;
+                }
+                int index = shown++;
+                addRenderableWidget(Button.builder(Component.literal(size + "x" + size), ignored -> {
+                    settings = settings.withArea(true, size);
+                    send();
+                }).bounds(left + PANEL_LEFT + index * 38, top + BUTTON_TOP, 36, BUTTON_HEIGHT).build());
+            }
+            toggle(left, top, 1, 0, COLUMN * 2 - 4, settings.areaMining() ? "Area: On" : "Area: Off", () -> {
+                settings = settings.withArea(!settings.areaMining(), settings.areaSize());
                 send();
-            }).bounds(left + PANEL_LEFT + i * 37, top + BUTTON_TOP, 34, BUTTON_HEIGHT).build();
-            button.active = size <= tier.maxAreaSide();
-            addRenderableWidget(button);
+            });
+            row = 2;
         }
-        toggle(left, top, 1, 0, COLUMN * 2 - 4, settings.areaMining() ? "Area: On" : "Area: Off", () -> {
-            settings = settings.withArea(!settings.areaMining(), settings.areaSize());
-            send();
-        });
-        int row = 2;
         if (shovel && tier.canTrench()) {
             int length = settings.configuredTrench(tier);
             toggle(left, top, row, 0, COLUMN, settings.trench() ? "Trench: On" : "Trench: Off", () -> {
@@ -210,6 +224,7 @@ public class ToolSettingsScreen extends Screen {
                 send();
             });
         }
+        return row;
     }
 
     private void axe(int left, int top, ToolTier tier) {
@@ -239,8 +254,7 @@ public class ToolSettingsScreen extends Screen {
     }
 
     private void hoe(int left, int top, ToolTier tier) {
-        digger(left, top, tier, false);
-        int row = 2;
+        int row = digger(left, top, tier, false);
         toggle(left, top, row, 0, COLUMN, settings.till() ? "Till: On" : "Till: Off", () -> {
             settings = settings.withHoe(!settings.till(), settings.harvest(), settings.replant());
             send();
@@ -361,15 +375,28 @@ public class ToolSettingsScreen extends Screen {
         addRenderableWidget(Button.builder(Component.literal(label), button -> action.run()).bounds(x, y, width, BUTTON_HEIGHT).build());
     }
 
+    /** Paint out baked squares that do not have a control on this item. */
+    private void coverUnusedSquares(GuiGraphicsExtractor graphics, int left, int top, ItemStack stack) {
+        boolean enchants = stack.getItem() instanceof TieredTool && !(stack.getItem() instanceof AdaptiveArmorItem);
+        boolean reset = stack.getItem() instanceof TieredTool;
+        for (int i = 0; i < CHECK_Y.length; i++) {
+            boolean used = enchants || (reset && i == 0);
+            if (!used) {
+                graphics.fill(left + 8, top + CHECK_Y[i], left + 18, top + CHECK_Y[i] + 10, 0xFFC6C6C6);
+            }
+        }
+    }
+
     @Override
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         int left = (this.width - IMAGE_WIDTH) / 2;
         int top = (this.height - IMAGE_HEIGHT) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, left, top, 0.0F, 0.0F, IMAGE_WIDTH, IMAGE_HEIGHT, 256, 256);
+        ItemStack stack = currentStack();
+        coverUnusedSquares(graphics, left, top, stack);
         for (var renderable : this.renderables) {
             renderable.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
-        ItemStack stack = currentStack();
         if (stack.getItem() instanceof FieldGeneratorItem) {
             graphics.text(this.font, stack.getHoverName(), left + 12, top + 8, 0xFF2A2A32, false);
             return;
@@ -389,8 +416,8 @@ public class ToolSettingsScreen extends Screen {
         if (mouseX >= left + 12 && mouseX <= left + 160 && mouseY >= top + 20 && mouseY <= top + 34) {
             graphics.text(this.font, Component.literal(capLabel(tool) == null ? "Points" : capLabel(tool)), mouseX + 8, mouseY - 10, 0xFFE8E8E8, true);
         }
-        if (tool.tier().usesEnergy()) {
-            graphics.text(this.font, Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), tool.tier().energyCapacity()), left + 120, top + 24, 0xFFB7E7FF, false);
+        if (mouseX >= left + 12 && mouseX <= left + 160 && mouseY >= top + 20 && mouseY <= top + 34 && tool.tier().usesEnergy()) {
+            graphics.text(this.font, Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), tool.tier().energyCapacity()), mouseX + 8, mouseY + 8, 0xFFB7E7FF, true);
         }
         if (settings.grading() && tool instanceof AdaptiveShovelItem) {
             graphics.text(this.font, Component.literal("Above Y " + height()), left + 120, top + 8, 0xFFE8E8E8, false);

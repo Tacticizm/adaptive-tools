@@ -16,6 +16,8 @@ public class FieldGeneratorScreen extends AbstractContainerScreen<FieldGenerator
 
     public FieldGeneratorScreen(FieldGeneratorMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 176);
+        // The sheet's label row is just above the player slots, which start at y=84.
+        this.inventoryLabelY = 72;
     }
 
     @Override

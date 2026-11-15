@@ -136,7 +136,7 @@ public final class AdaptiveToolsData {
             JsonObject model = new JsonObject();
             model.addProperty("parent", "minecraft:block/cube_all");
             JsonObject textures = new JsonObject();
-            textures.addProperty("all", AdaptiveTools.MOD_ID + ":item/" + tierId + "_ingot");
+            textures.addProperty("all", AdaptiveTools.MOD_ID + ":block/" + tierId + "_block");
             model.add("textures", textures);
             JsonObject state = new JsonObject();
             JsonObject variants = new JsonObject();

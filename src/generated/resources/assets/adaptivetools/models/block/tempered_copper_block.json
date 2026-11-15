@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "adaptivetools:item/tempered_copper_ingot"
+    "all": "adaptivetools:block/tempered_copper_block"
   }
 }

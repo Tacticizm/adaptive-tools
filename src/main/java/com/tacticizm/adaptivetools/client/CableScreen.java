@@ -21,6 +21,11 @@ public class CableScreen extends AbstractContainerScreen<CableMenu> {
     }
 
     @Override
+    protected void extractLabels(GuiGraphicsExtractor graphics, int mouseX, int mouseY) {
+        // Filter rows are not a player inventory, so the stock "Inventory" line is omitted.
+    }
+
+    @Override
     protected void init() {
         super.init();
         for (int i = 0; i < 6; i++) {
