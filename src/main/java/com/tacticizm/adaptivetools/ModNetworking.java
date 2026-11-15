@@ -42,6 +42,19 @@ public final class ModNetworking {
         }
     }
 
+    public record ToolXpActionPayload(int slot, int action) implements CustomPacketPayload {
+        public static final Type<ToolXpActionPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "tool_xp_action"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, ToolXpActionPayload> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, ToolXpActionPayload::slot,
+                ByteBufCodecs.VAR_INT, ToolXpActionPayload::action,
+                ToolXpActionPayload::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public record ToggleWornAbilityPayload(int bit) implements CustomPacketPayload {
         public static final Type<ToggleWornAbilityPayload> TYPE = new Type<>(Identifier.fromNamespaceAndPath(AdaptiveTools.MOD_ID, "toggle_worn_ability"));
         public static final StreamCodec<RegistryFriendlyByteBuf, ToggleWornAbilityPayload> STREAM_CODEC = StreamCodec.composite(
@@ -55,7 +68,7 @@ public final class ModNetworking {
     }
 
     public static void register(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("3");
+        PayloadRegistrar registrar = event.registrar("4");
         registrar.playToServer(UpdateToolSettingsPayload.TYPE, UpdateToolSettingsPayload.STREAM_CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) {
                 applySettings(player, payload.slot(), payload.areaMining(), payload.areaSize());
@@ -64,6 +77,11 @@ public final class ModNetworking {
         registrar.playToServer(UpdateFullToolSettingsPayload.TYPE, UpdateFullToolSettingsPayload.STREAM_CODEC, (payload, context) -> {
             if (context.player() instanceof ServerPlayer player) {
                 applyFullSettings(player, payload.slot(), payload.settings());
+            }
+        });
+        registrar.playToServer(ToolXpActionPayload.TYPE, ToolXpActionPayload.STREAM_CODEC, (payload, context) -> {
+            if (context.player() instanceof ServerPlayer player) {
+                ToolXp.act(player, payload.slot(), payload.action());
             }
         });
         registrar.playToServer(ToggleWornAbilityPayload.TYPE, ToggleWornAbilityPayload.STREAM_CODEC, (payload, context) -> {
@@ -114,6 +132,10 @@ public final class ModNetworking {
         if (!(stack.getItem() instanceof TieredTool tool)) {
             return;
         }
-        stack.set(ModComponents.TOOL_SETTINGS.get(), settings.clamped(tool.tier()));
+        ToolSettings current = ToolSettings.of(stack, tool.tier());
+        stack.set(ModComponents.TOOL_SETTINGS.get(), ToolXp.purchase(stack, current, settings, tool.tier()));
+        if (player instanceof ServerPlayer server) {
+            ToolXp.syncEnchantments(stack, server.level().registryAccess());
+        }
     }
 }

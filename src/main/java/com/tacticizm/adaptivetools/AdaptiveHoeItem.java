@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 /**
  * Hoe. Till and harvest are separate toggles and share the area caps. A seed is reserved in the
  * inventory before any replant, so the last seed of a type is never spent. Only age-based crops
- * are harvested. Tilling does not grant experience.
+ * are harvested. Tilling an untilled block and harvesting a crop grant tool XP. Tilling again does not.
  */
 public class AdaptiveHoeItem extends AdaptiveToolItem {
     public AdaptiveHoeItem(ToolTier tier, Properties properties) {
@@ -55,6 +55,7 @@ public class AdaptiveHoeItem extends AdaptiveToolItem {
             }
             if (did) {
                 ToolBilling.pay(player.getMainHandItem(), player, tier, ability);
+                ToolXp.award(player.getMainHandItem(), 1);
                 acted++;
             }
         }

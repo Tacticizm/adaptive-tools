@@ -43,6 +43,8 @@ public final class ToolBreakEvents {
                     || (TreeFelling.isLog(event.getLevel(), pos) && settings.fell() && axe.tier().maxFellLogs() > 0);
             if (!ToolBilling.canAfford(stack, player, axe.tier(), ability)) {
                 event.setCanceled(true);
+            } else if (!event.getLevel().isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                ToolXp.onBlockBroken(serverPlayer, event.getState());
             }
             return;
         }
@@ -52,6 +54,8 @@ public final class ToolBreakEvents {
         if (AdaptivePickaxeItem.isBreakingArea()) {
             if (!pick.canAfford(stack, player)) {
                 event.setCanceled(true);
+            } else if (!event.getLevel().isClientSide() && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+                ToolXp.onBlockBroken(serverPlayer, event.getState());
             }
             return;
         }
@@ -62,6 +66,7 @@ public final class ToolBreakEvents {
         if (event.getLevel().isClientSide() || !(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)) {
             return;
         }
+        ToolXp.onBlockBroken(serverPlayer, event.getState());
         AdaptivePickaxeItem.captureFace(player, pos);
         pick.breakAreaIfCreative(serverPlayer, pos);
     }
@@ -87,6 +92,7 @@ public final class ToolBreakEvents {
         if (event.isCanceled() || event.getLevel().isClientSide() || !(player instanceof net.minecraft.server.level.ServerPlayer serverPlayer)) {
             return;
         }
+        ToolXp.onBlockBroken(serverPlayer, event.getState());
         if (!AdaptiveShovelItem.isDigging()) {
             shovel.digIfCreative(serverPlayer, event.getPos());
         }

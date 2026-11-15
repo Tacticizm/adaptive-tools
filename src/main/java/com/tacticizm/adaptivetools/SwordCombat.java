@@ -82,6 +82,7 @@ public final class SwordCombat {
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) {
             return;
         }
+        ToolXp.onKill(player, event.getEntity());
         var stack = player.getMainHandItem();
         if (!(stack.getItem() instanceof AdaptiveSwordItem sword)) {
             return;

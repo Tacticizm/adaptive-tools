@@ -25,12 +25,15 @@ import com.tacticizm.adaptivetools.AdaptiveSwordItem;
 import com.tacticizm.adaptivetools.ModEnergy;
 import com.tacticizm.adaptivetools.ModNetworking;
 import com.tacticizm.adaptivetools.TieredTool;
+import com.tacticizm.adaptivetools.ModComponents;
+import com.tacticizm.adaptivetools.ToolProgress;
 import com.tacticizm.adaptivetools.ToolSettings;
 import com.tacticizm.adaptivetools.ToolTier;
+import com.tacticizm.adaptivetools.ToolXp;
 
 /**
  * Tool Settings. Each ability the held tool's tier can learn has an on/off toggle, and a size or
- * limit where the spec has one. Abilities a tier cannot learn are not shown. Tool XP is not built yet.
+ * limit where the spec has one. Abilities a tier cannot learn are not shown. Points buy them.
  */
 public class ToolSettingsScreen extends Screen {
     private static final Identifier TEXTURE = Identifier.fromNamespaceAndPath("adaptivetools", "textures/gui/tool_settings.png");
@@ -98,10 +101,26 @@ public class ToolSettingsScreen extends Screen {
         } else {
             digger(left, top, tier, false);
         }
+        xpControls(left, top);
         // The narrow slot on the right of the texture, not the main panel.
         addRenderableWidget(Button.builder(Component.translatable("gui.done"), button -> onClose())
                 .bounds(left + 176, top + 112, 64, 16)
                 .build());
+    }
+
+    private void xpControls(int left, int top) {
+        ToolProgress progress = currentStack().get(ModComponents.TOOL_PROGRESS.get());
+        int efficiency = progress == null ? 0 : progress.efficiencyOn();
+        int fortune = progress == null ? 0 : progress.fortuneOn();
+        boolean silk = progress != null && progress.silkOn() > 0;
+        toggle(left, top, 0, 2, 64, "Eff " + efficiency, () -> act(ToolXp.EFF_UP));
+        toggle(left, top, 1, 2, 64, "Fort " + fortune, () -> act(ToolXp.FORT_UP));
+        toggle(left, top, 2, 2, 64, silk ? "Silk: On" : "Silk", () -> act(ToolXp.SILK));
+        toggle(left, top, 3, 2, 64, "Reset", () -> act(ToolXp.RESET));
+    }
+
+    private void act(int action) {
+        ClientPacketDistributor.sendToServer(new ModNetworking.ToolXpActionPayload(slot, action));
     }
 
     private void field(int left, int top, FieldGeneratorItem generator) {
@@ -359,9 +378,16 @@ public class ToolSettingsScreen extends Screen {
             return;
         }
         graphics.text(this.font, stack.getHoverName(), left + 12, top + 8, 0xFF2A2A32, false);
-        String cap = capLabel(tool);
-        if (cap != null) {
-            graphics.text(this.font, Component.literal(cap), left + 12, top + 24, 0xFFE8E8E8, false);
+        int percent = ToolXp.percent(stack);
+        int filled = percent * 64 / 100;
+        graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.fromNamespaceAndPath("adaptivetools", "textures/gui/hud_energy_bar.png"), left + 12, top + 22, 0.0F, 0.0F, 64, 10, 256, 256);
+        if (filled > 0) {
+            graphics.blit(RenderPipelines.GUI_TEXTURED, Identifier.fromNamespaceAndPath("adaptivetools", "textures/gui/hud_energy_bar.png"), left + 12, top + 22, 0.0F, 16.0F, filled, 10, 256, 256);
+        }
+        int level = ToolXp.levelFor(stack.getOrDefault(ModComponents.TOOL_PROGRESS.get(), ToolProgress.fresh()).xp());
+        graphics.text(this.font, Component.literal("Lv " + level + "  " + percent + "%  " + ToolXp.unspent(stack) + "/" + ToolXp.earned(stack)), left + 80, top + 23, 0xFFE8E8E8, false);
+        if (mouseX >= left + 12 && mouseX <= left + 160 && mouseY >= top + 20 && mouseY <= top + 34) {
+            graphics.text(this.font, Component.literal(capLabel(tool) == null ? "Points" : capLabel(tool)), mouseX + 8, mouseY - 10, 0xFFE8E8E8, true);
         }
         if (tool.tier().usesEnergy()) {
             graphics.text(this.font, Component.translatable("adaptivetools.tooltip.energy", ModEnergy.getStored(stack), tool.tier().energyCapacity()), left + 120, top + 24, 0xFFB7E7FF, false);

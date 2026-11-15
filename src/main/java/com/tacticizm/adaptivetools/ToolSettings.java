@@ -10,7 +10,8 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * Per-stack tool settings. Abilities start off. Sizes are clamped to the tier whenever they are
- * read. Tool XP is not built yet, so a tier that cannot learn an ability has that toggle forced off.
+ * read. A stack with saved XP progress only keeps the abilities it has bought. A stack with
+ * no progress is grandfathered and keeps every ability the tier allows.
  *
  * <p>Toggles live in one bit field so the codec stays small enough for existing stacks to load.
  */
@@ -111,10 +112,8 @@ public record ToolSettings(
 
     public static ToolSettings of(ItemStack stack, ToolTier tier) {
         ToolSettings stored = stack.get(ModComponents.TOOL_SETTINGS.get());
-        if (stored == null) {
-            return defaults(tier);
-        }
-        return stored.clamped(tier);
+        ToolSettings base = stored == null ? defaults(tier) : stored.clamped(tier);
+        return ToolXp.limit(stack, base, tier);
     }
 
     public boolean areaMining() { return has(AREA); }

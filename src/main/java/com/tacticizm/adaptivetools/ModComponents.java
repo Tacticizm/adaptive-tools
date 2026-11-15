@@ -21,6 +21,10 @@ public final class ModComponents {
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<ToolSettings>> TOOL_SETTINGS = COMPONENTS.register("tool_settings",
             () -> component(builder -> builder.persistent(ToolSettings.CODEC).networkSynchronized(ToolSettings.STREAM_CODEC)));
 
+    /** Tool XP, bought abilities, and shield-absorb remainder. Absent means a grandfathered stack. */
+    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ToolProgress>> TOOL_PROGRESS = COMPONENTS.register("tool_progress",
+            () -> component(builder -> builder.persistent(ToolProgress.CODEC).networkSynchronized(ToolProgress.STREAM_CODEC)));
+
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Integer>> MOMENTUM_STACKS = COMPONENTS.register("momentum_stacks",
             () -> component(builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT)));
 

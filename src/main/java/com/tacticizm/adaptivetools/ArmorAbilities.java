@@ -76,6 +76,7 @@ public final class ArmorAbilities {
             return damage;
         }
         ModEnergy.extract(piece, cover * FE_PER_DAMAGE);
+        ToolXp.noteShield(piece, cover);
         return damage - cover;
     }
 
@@ -222,7 +223,8 @@ public final class ArmorAbilities {
             if (!(stack.getItem() instanceof AdaptiveArmorItem armor) || !supports(armor, bit)) {
                 continue;
             }
-            ToolSettings next = ToolSettings.of(stack, armor.tier()).toggle(bit);
+            ToolSettings current = ToolSettings.of(stack, armor.tier());
+            ToolSettings next = ToolXp.purchase(stack, current, current.toggle(bit), armor.tier());
             stack.set(ModComponents.TOOL_SETTINGS.get(), next);
             changed = true;
             anyOn |= next.enabled(bit);
