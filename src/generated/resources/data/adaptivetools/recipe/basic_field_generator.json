@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:embersteel_ingot",
+    "minecraft:furnace",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "id": "adaptivetools:basic_field_generator"
+  }
+}

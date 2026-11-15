@@ -14,8 +14,39 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# Eclipse Gradle plugin generated files
-# Eclipse Core
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/**/out/
+.run/
+
+# Eclipse
+.apt_generated
+.classpath
+.eclipse/
+.factorypath
 .project
-# JDT-specific (Eclipse Java Development Tools)
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/**/bin/
+
+# VS Code
+.vscode/
+
+# Mac OS
+.DS_Store
+
+# Minecraft
+run/
+!**/src/**/run/
+**/src/generated/**/.cache/
+repo/
+!**/src/**/repo/
+
+# Eclipse Gradle plugin generated files
 .classpath

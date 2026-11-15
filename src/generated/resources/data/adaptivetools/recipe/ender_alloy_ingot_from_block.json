@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:ender_alloy_block"
+  ],
+  "result": {
+    "count": 9,
+    "id": "adaptivetools:ender_alloy_ingot"
+  }
+}

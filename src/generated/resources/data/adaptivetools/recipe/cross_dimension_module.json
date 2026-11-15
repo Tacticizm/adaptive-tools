@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:ender_pearl",
+    "adaptivetools:flux_alloy_ingot"
+  ],
+  "result": {
+    "id": "adaptivetools:cross_dimension_module"
+  }
+}

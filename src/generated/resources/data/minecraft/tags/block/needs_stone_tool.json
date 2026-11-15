@@ -1,0 +1,9 @@
+{
+  "values": [
+    "adaptivetools:tempered_copper_block",
+    "adaptivetools:resonant_alloy_block",
+    "adaptivetools:embersteel_block",
+    "adaptivetools:flux_alloy_block",
+    "adaptivetools:ender_alloy_block"
+  ]
+}

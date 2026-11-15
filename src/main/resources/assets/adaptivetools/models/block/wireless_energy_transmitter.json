@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "adaptivetools:block/wireless_energy_transmitter_bottom",
+    "up": "adaptivetools:block/wireless_energy_transmitter_top",
+    "north": "adaptivetools:block/wireless_energy_transmitter_front",
+    "south": "adaptivetools:block/wireless_energy_transmitter_side",
+    "west": "adaptivetools:block/wireless_energy_transmitter_side",
+    "east": "adaptivetools:block/wireless_energy_transmitter_side",
+    "particle": "adaptivetools:block/wireless_energy_transmitter_side"
+  }
+}

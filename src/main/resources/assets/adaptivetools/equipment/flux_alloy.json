@@ -1,0 +1,13 @@
+{
+  "layers": {
+    "humanoid": [
+      { "texture": "adaptivetools:flux_alloy" }
+    ],
+    "humanoid_leggings": [
+      { "texture": "adaptivetools:flux_alloy" }
+    ],
+    "humanoid_baby": [
+      { "texture": "adaptivetools:flux_alloy" }
+    ]
+  }
+}

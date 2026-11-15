@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:water_bucket",
+    "adaptivetools:resonant_alloy_ingot",
+    "adaptivetools:resonant_alloy_ingot",
+    "minecraft:prismarine_crystals",
+    "minecraft:prismarine_crystals"
+  ],
+  "result": {
+    "id": "adaptivetools:water_walking_module"
+  }
+}

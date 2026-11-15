@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:embersteel_ingot",
+  "base": "adaptivetools:resonant_alloy_leggings",
+  "result": {
+    "id": "adaptivetools:embersteel_leggings"
+  },
+  "template": "adaptivetools:embersteel_upgrade_smithing_template"
+}

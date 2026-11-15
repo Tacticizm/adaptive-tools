@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "adaptivetools:block/ender_alloy_block"
+    }
+  }
+}

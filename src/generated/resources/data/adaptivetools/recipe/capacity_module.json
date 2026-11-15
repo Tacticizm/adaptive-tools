@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:redstone_block",
+    "adaptivetools:embersteel_ingot"
+  ],
+  "result": {
+    "id": "adaptivetools:capacity_module"
+  }
+}

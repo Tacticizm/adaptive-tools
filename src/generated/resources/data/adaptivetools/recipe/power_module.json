@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:redstone",
+    "adaptivetools:tempered_copper_ingot"
+  ],
+  "result": {
+    "id": "adaptivetools:power_module"
+  }
+}

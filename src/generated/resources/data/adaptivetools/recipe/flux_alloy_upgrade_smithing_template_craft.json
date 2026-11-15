@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:diamond",
+    "adaptivetools:embersteel_ingot",
+    "minecraft:redstone_block"
+  ],
+  "result": {
+    "id": "adaptivetools:flux_alloy_upgrade_smithing_template"
+  }
+}

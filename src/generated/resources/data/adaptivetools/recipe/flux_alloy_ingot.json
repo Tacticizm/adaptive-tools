@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "adaptivetools:embersteel_ingot",
+    "adaptivetools:embersteel_ingot",
+    "minecraft:redstone_block",
+    "minecraft:diamond"
+  ],
+  "result": {
+    "id": "adaptivetools:flux_alloy_ingot"
+  }
+}

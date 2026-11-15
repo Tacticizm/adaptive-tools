@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:ender_alloy_ingot",
+  "base": "adaptivetools:flux_alloy_shovel",
+  "result": {
+    "id": "adaptivetools:ender_alloy_shovel"
+  },
+  "template": "adaptivetools:ender_alloy_upgrade_smithing_template"
+}

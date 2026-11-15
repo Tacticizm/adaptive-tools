@@ -1,0 +1,568 @@
+{
+ "wireless_energy_transmitter": {
+  "areas": {
+   "title (code)": [
+    8,
+    6,
+    160,
+    8
+   ],
+   "accent rule": [
+    8,
+    16,
+    160,
+    1
+   ],
+   "channel field": [
+    8,
+    20,
+    132,
+    12
+   ],
+   "Channels list button (icon, code draws sprite)": [
+    142,
+    19,
+    16,
+    14
+   ],
+   "INPUT slot frame": [
+    8,
+    38,
+    18,
+    18
+   ],
+   "progress arrow (empty)": [
+    31,
+    39,
+    24,
+    16
+   ],
+   "READY slot frame": [
+    59,
+    38,
+    18,
+    18
+   ],
+   "Cap module slot": [
+    82,
+    38,
+    18,
+    18
+   ],
+   "Rate module slot": [
+    106,
+    38,
+    18,
+    18
+   ],
+   "Dim module slot": [
+    130,
+    38,
+    18,
+    18
+   ],
+   "module labels (code, centred under each)": [
+    80,
+    60,
+    70,
+    8
+   ],
+   "FE bar frame": [
+    160,
+    20,
+    10,
+    50
+   ],
+   "FE bar interior (fill target)": [
+    161,
+    21,
+    8,
+    48
+   ],
+   "status line (code)": [
+    8,
+    60,
+    70,
+    8
+   ],
+   "Inventory label (code)": [
+    8,
+    72,
+    60,
+    8
+   ],
+   "player inventory": [
+    7,
+    83,
+    162,
+    54
+   ],
+   "hotbar": [
+    7,
+    141,
+    162,
+    18
+   ]
+  },
+  "sprites": {
+   "fe_fill (crop from bottom, draw at 161,21)": [
+    176,
+    0,
+    8,
+    48
+   ],
+   "arrow_fill (crop from left, draw at 31,39)": [
+    176,
+    52,
+    24,
+    16
+   ],
+   "button_channels normal": [
+    0,
+    168,
+    16,
+    14
+   ],
+   "button_channels hover": [
+    0,
+    184,
+    16,
+    14
+   ],
+   "button_channels disabled": [
+    0,
+    200,
+    16,
+    14
+   ]
+  }
+ },
+ "base_generator": {
+  "areas": {
+   "title (code)": [
+    8,
+    6,
+    160,
+    8
+   ],
+   "accent rule": [
+    8,
+    16,
+    160,
+    1
+   ],
+   "FUEL slot frame": [
+    36,
+    22,
+    18,
+    18
+   ],
+   "RETURN slot frame": [
+    36,
+    52,
+    18,
+    18
+   ],
+   "FE bar frame": [
+    62,
+    20,
+    12,
+    52
+   ],
+   "FE bar interior (fill target)": [
+    63,
+    21,
+    10,
+    50
+   ],
+   "status/rate text (code)": [
+    80,
+    24,
+    66,
+    20
+   ],
+   "Gen. rate module slot": [
+    150,
+    22,
+    18,
+    18
+   ],
+   "Fuel eff. module slot": [
+    150,
+    52,
+    18,
+    18
+   ],
+   "Inventory label (code)": [
+    8,
+    72,
+    60,
+    8
+   ],
+   "player inventory": [
+    7,
+    83,
+    162,
+    54
+   ],
+   "hotbar": [
+    7,
+    141,
+    162,
+    18
+   ]
+  },
+  "sprites": {
+   "fe_fill (crop from bottom, draw at 63,21)": [
+    176,
+    0,
+    10,
+    50
+   ]
+  }
+ },
+ "machine_receiver": {
+  "areas": {
+   "title (code)": [
+    8,
+    6,
+    160,
+    8
+   ],
+   "accent rule": [
+    8,
+    16,
+    160,
+    1
+   ],
+   "channel field": [
+    8,
+    20,
+    160,
+    12
+   ],
+   "status line (code)": [
+    8,
+    35,
+    160,
+    8
+   ],
+   "channel list": [
+    8,
+    46,
+    148,
+    82
+   ],
+   "list header row (code)": [
+    10,
+    48,
+    144,
+    10
+   ],
+   "list rows 1-5 (code, 12 px pitch)": [
+    9,
+    60,
+    146,
+    60
+   ],
+   "scrollbar track": [
+    158,
+    46,
+    10,
+    82
+   ],
+   "Select button (code draws sprite)": [
+    8,
+    132,
+    78,
+    16
+   ],
+   "Disconnect button (code draws sprite)": [
+    90,
+    132,
+    78,
+    16
+   ],
+   "hint line (code)": [
+    8,
+    152,
+    160,
+    8
+   ]
+  },
+  "sprites": {
+   "row_selected (draw at 9, 60+12n)": [
+    0,
+    222,
+    146,
+    12
+   ],
+   "row_hover": [
+    0,
+    236,
+    146,
+    12
+   ],
+   "scroller normal (8x15)": [
+    176,
+    0,
+    8,
+    15
+   ],
+   "scroller disabled (8x15)": [
+    186,
+    0,
+    8,
+    15
+   ],
+   "button_wide normal": [
+    60,
+    168,
+    78,
+    16
+   ],
+   "button_wide hover": [
+    60,
+    186,
+    78,
+    16
+   ],
+   "button_wide disabled": [
+    60,
+    204,
+    78,
+    16
+   ]
+  }
+ },
+ "wireless_energy_transmitter_channels": {
+  "panel": [
+   256,
+   176
+  ],
+  "areas": {
+   "title (code)": [
+    8,
+    6,
+    240,
+    8
+   ],
+   "accent rule": [
+    8,
+    16,
+    240,
+    1
+   ],
+   "current channel field (read-only, code text at 11,22)": [
+    8,
+    20,
+    240,
+    12
+   ],
+   "list caption (code)": [
+    8,
+    36,
+    240,
+    8
+   ],
+   "channel list": [
+    8,
+    46,
+    228,
+    82
+   ],
+   "list header row (code; Name x11, Owner x150)": [
+    10,
+    48,
+    224,
+    10
+   ],
+   "header separator (baked)": [
+    9,
+    58,
+    226,
+    1
+   ],
+   "list rows 1-5 (code, 12 px pitch)": [
+    9,
+    60,
+    226,
+    60
+   ],
+   "scrollbar track": [
+    238,
+    46,
+    10,
+    82
+   ],
+   "Select/Change button (code draws sprite)": [
+    8,
+    134,
+    70,
+    16
+   ],
+   "Disconnect button (code draws sprite)": [
+    82,
+    134,
+    70,
+    16
+   ],
+   "Create Channel... button (code draws sprite)": [
+    156,
+    134,
+    92,
+    16
+   ],
+   "hint line (code)": [
+    8,
+    156,
+    240,
+    8
+   ]
+  },
+  "sprites": {
+   "button_70 normal": [
+    0,
+    176,
+    70,
+    16
+   ],
+   "button_70 hover": [
+    0,
+    193,
+    70,
+    16
+   ],
+   "button_70 disabled": [
+    0,
+    210,
+    70,
+    16
+   ],
+   "button_92 normal": [
+    72,
+    176,
+    92,
+    16
+   ],
+   "button_92 hover": [
+    72,
+    193,
+    92,
+    16
+   ],
+   "button_92 disabled": [
+    72,
+    210,
+    92,
+    16
+   ],
+   "scroller normal (draw at x239, y47..112)": [
+    166,
+    176,
+    8,
+    15
+   ],
+   "scroller disabled (5 rows or fewer)": [
+    176,
+    176,
+    8,
+    15
+   ],
+   "row_selected (draw at 9, 60+12n)": [
+    0,
+    228,
+    226,
+    12
+   ],
+   "row_hover (draw at 9, 60+12n)": [
+    0,
+    241,
+    226,
+    12
+   ]
+  }
+ },
+ "wireless_energy_transmitter_create_channel": {
+  "panel": [
+   256,
+   120
+  ],
+  "areas": {
+   "title (code)": [
+    8,
+    6,
+    240,
+    8
+   ],
+   "accent rule": [
+    8,
+    16,
+    240,
+    1
+   ],
+   "name label (code)": [
+    8,
+    22,
+    240,
+    8
+   ],
+   "name text field (code draws sprite; text/caret at 12,38)": [
+    8,
+    34,
+    240,
+    16
+   ],
+   "owner line (code)": [
+    8,
+    56,
+    240,
+    8
+   ],
+   "Create button (code draws sprite)": [
+    8,
+    96,
+    116,
+    16
+   ],
+   "Cancel button (code draws sprite)": [
+    132,
+    96,
+    116,
+    16
+   ]
+  },
+  "sprites": {
+   "text_field normal": [
+    0,
+    124,
+    240,
+    16
+   ],
+   "text_field focused": [
+    0,
+    142,
+    240,
+    16
+   ],
+   "button_116 normal": [
+    0,
+    160,
+    116,
+    16
+   ],
+   "button_116 hover": [
+    0,
+    178,
+    116,
+    16
+   ],
+   "button_116 disabled": [
+    0,
+    196,
+    116,
+    16
+   ]
+  }
+ }
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "adaptivetools:embersteel_ingot",
+  "base": "adaptivetools:resonant_alloy_pickaxe",
+  "result": {
+    "id": "adaptivetools:embersteel_pickaxe"
+  },
+  "template": "adaptivetools:embersteel_upgrade_smithing_template"
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "adaptivetools:resonant_alloy_ingot",
+    "S": "minecraft:stick"
+  },
+  "pattern": [
+    "III",
+    " S ",
+    " S "
+  ],
+  "result": {
+    "id": "adaptivetools:resonant_alloy_pickaxe"
+  }
+}

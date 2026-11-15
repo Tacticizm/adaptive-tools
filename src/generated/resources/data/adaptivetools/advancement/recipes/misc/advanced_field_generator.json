@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_ender_alloy": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adaptivetools:ender_alloy_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adaptivetools:advanced_field_generator"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_ender_alloy"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adaptivetools:advanced_field_generator"
+    ]
+  }
+}

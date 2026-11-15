@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_embersteel_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "adaptivetools:embersteel_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "adaptivetools:embersteel_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_embersteel_ingot"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "adaptivetools:embersteel_block"
+    ]
+  }
+}
